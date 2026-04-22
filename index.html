@@ -1,0 +1,3183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>명경각(明鏡閣) — 국가 비밀 관리국</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a08;
+    --bg2: #0f0f0c;
+    --bg3: #141410;
+    --surface: #1a1a14;
+    --surface2: #222218;
+    --border: #2a2a1e;
+    --border2: #3a3a2a;
+    --gold: #c8a96e;
+    --gold2: #e8c98e;
+    --gold3: #a07840;
+    --red: #8b2020;
+    --red2: #c03030;
+    --red-dim: #3a1010;
+    --text: #d4cdb8;
+    --text2: #9a9278;
+    --text3: #5a5440;
+    --text-bright: #ede8d8;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Noto Serif KR', serif;
+    --sans: 'Noto Sans KR', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--gold3); }
+
+  /* ── TOP ALERT BAR ── */
+  .alert-bar {
+    background: var(--red);
+    padding: 6px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: #ffcccc;
+    border-bottom: 1px solid #5a1010;
+    position: relative;
+    overflow: hidden;
+  }
+  .alert-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 21px);
+  }
+  .alert-dot {
+    width: 6px; height: 6px;
+    background: #ff6060;
+    border-radius: 50%;
+    animation: blink 1.2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .alert-marquee {
+    overflow: hidden;
+    flex: 1;
+    max-width: 700px;
+  }
+  .alert-marquee span {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 28s linear infinite;
+  }
+  @keyframes marquee { 0%{transform:translateX(100%)} 100%{transform:translateX(-100%)} }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,8,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 20px;
+  }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .logo-emblem {
+    width: 40px; height: 40px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .logo-emblem svg { width: 100%; height: 100%; }
+  .logo-text { line-height: 1.2; }
+  .logo-ko {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    display: block;
+  }
+  .logo-en {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    display: block;
+  }
+
+  nav { display: flex; align-items: center; gap: 2px; }
+  .nav-item {
+    position: relative;
+    font-family: var(--serif);
+    font-size: 13px;
+    color: var(--text2);
+    text-decoration: none;
+    padding: 8px 14px;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+  .nav-item:hover { color: var(--gold); }
+  .nav-item.has-sub::after {
+    content: '▾';
+    font-size: 9px;
+    margin-left: 4px;
+    opacity: 0.5;
+  }
+
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--gold3);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: all 0.2s ease;
+    z-index: 200;
+  }
+  .nav-item:hover .dropdown,
+  .nav-item:focus-within .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .dropdown a {
+    display: block;
+    padding: 10px 16px;
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--text2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .dropdown a:last-child { border-bottom: none; }
+  .dropdown a:hover {
+    color: var(--gold);
+    background: var(--surface);
+    padding-left: 22px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .header-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-align: right;
+    line-height: 1.5;
+  }
+  .clearance-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 3px 8px;
+    border: 1px solid var(--red);
+    color: var(--red2);
+    letter-spacing: 0.1em;
+    background: var(--red-dim);
+  }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px; height: 1.5px;
+    background: var(--text2);
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* ── MOBILE MENU ── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0; right: 0;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    z-index: 99;
+    padding: 12px 0;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block;
+    padding: 11px 24px;
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--text2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.15s;
+  }
+  .mobile-menu a:hover { color: var(--gold); background: var(--surface); }
+  .mobile-menu .sub-label {
+    padding: 8px 24px 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    background: var(--bg3);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    padding: 80px 24px 60px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 70% at 70% 40%, rgba(200,169,110,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 20% 80%, rgba(139,32,32,0.06) 0%, transparent 50%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,169,110,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,169,110,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  /* 배경 한자 */
+  .hero-kanji {
+    position: absolute;
+    font-family: var(--serif);
+    font-weight: 900;
+    color: rgba(200,169,110,0.03);
+    pointer-events: none;
+    line-height: 1;
+    user-select: none;
+  }
+  .hero-kanji.k1 { font-size: clamp(200px, 30vw, 400px); top: -5%; right: -2%; }
+  .hero-kanji.k2 { font-size: clamp(100px, 15vw, 200px); bottom: 10%; left: -1%; }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold3);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-label::before {
+    content: '';
+    display: inline-block;
+    width: 30px; height: 1px;
+    background: var(--gold3);
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: clamp(38px, 5vw, 72px);
+    color: var(--text-bright);
+    line-height: 1.2;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .hero-title .gold { color: var(--gold); }
+
+  .hero-subtitle {
+    font-family: var(--mono);
+    font-size: clamp(11px, 1.5vw, 13px);
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 28px;
+  }
+
+  .hero-desc {
+    font-size: clamp(13px, 1.5vw, 15px);
+    color: var(--text2);
+    line-height: 1.9;
+    max-width: 560px;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--gold3);
+    color: var(--bg);
+    font-family: var(--serif);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid var(--gold3);
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: transparent;
+    color: var(--text2);
+    font-family: var(--serif);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .btn-secondary:hover {
+    color: var(--gold);
+    border-color: var(--gold3);
+  }
+
+  /* 오른쪽 카드 패널 */
+  .hero-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--gold3);
+    padding: 0;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 14px 20px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--gold3);
+  }
+  .panel-status {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--red2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .panel-status::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: var(--red2);
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
+  }
+  .panel-body { padding: 20px; }
+  .panel-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .panel-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .panel-key {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .panel-val {
+    font-family: var(--serif);
+    font-size: 12px;
+    color: var(--text);
+    text-align: right;
+    line-height: 1.5;
+  }
+  .panel-val.warn { color: var(--red2); font-weight: 600; }
+  .panel-val.ok { color: #6a9960; }
+  .panel-progress {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text3);
+    margin-bottom: 6px;
+    letter-spacing: 0.08em;
+  }
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--gold3), var(--red2));
+    animation: fillAnim 2s ease-out forwards;
+  }
+  @keyframes fillAnim { from{width:0} }
+
+  /* ── SECTION BASE ── */
+  section { padding: 80px 24px; }
+  .section-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .section-header {
+    margin-bottom: 48px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold3);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+    line-height: 1.3;
+  }
+  .section-line {
+    width: 40px; height: 2px;
+    background: var(--gold3);
+    margin-top: 12px;
+  }
+  .section-more {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .section-more::after { content: '→'; }
+  .section-more:hover { color: var(--gold); }
+
+  /* ── 공지 섹션 ── */
+  .notices-section { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+  .notice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+  .notice-col { background: var(--bg2); }
+  .notice-col-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg3);
+  }
+  .notice-col-title {
+    font-family: var(--serif);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.05em;
+  }
+  .notice-col-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 7px;
+    letter-spacing: 0.1em;
+  }
+  .badge-red { border: 1px solid var(--red); color: var(--red2); background: var(--red-dim); }
+  .badge-gold { border: 1px solid var(--gold3); color: var(--gold); background: rgba(200,169,110,0.08); }
+  .badge-gray { border: 1px solid var(--border2); color: var(--text3); }
+
+  .notice-list { list-style: none; }
+  .notice-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  .notice-item:last-child { border-bottom: none; }
+  .notice-item:hover { background: var(--surface); }
+  .notice-grade {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    letter-spacing: 0.08em;
+  }
+  .grade-b { background: var(--red-dim); color: var(--red2); border: 1px solid var(--red); }
+  .grade-y { background: rgba(200,169,110,0.1); color: var(--gold); border: 1px solid var(--gold3); }
+  .grade-w { background: var(--surface2); color: var(--text3); border: 1px solid var(--border2); }
+  .grade-r { background: #1a0505; color: #ff4444; border: 1px solid #6a1010; }
+
+  .notice-content { flex: 1; min-width: 0; }
+  .notice-title-text {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 400;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+  }
+  .notice-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    display: flex;
+    gap: 10px;
+    letter-spacing: 0.05em;
+  }
+  .notice-new {
+    display: inline-block;
+    width: 5px; height: 5px;
+    background: var(--red2);
+    border-radius: 50%;
+    margin-left: 6px;
+    vertical-align: middle;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  /* ── 세계관 카드 섹션 ── */
+  .world-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .world-card {
+    background: var(--bg2);
+    padding: 28px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    text-align: left;
+    width: 100%;
+  }
+  .world-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold3);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .world-card:hover { background: var(--surface); }
+  .world-card:hover::before { transform: scaleX(1); }
+  .world-card-icon {
+    font-size: 28px;
+    line-height: 1;
+  }
+  .world-card-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+  }
+  .world-card-title {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+    line-height: 1.3;
+  }
+  .world-card-desc {
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.7;
+    flex: 1;
+  }
+  .world-card-link {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gold3);
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .world-card-link::after { content: '→'; transition: transform 0.2s; }
+  .world-card:hover .world-card-link::after { transform: translateX(4px); }
+
+  /* ── 경보 현황 ── */
+  .alert-section { background: var(--bg3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .alert-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .alert-card {
+    background: var(--surface);
+    padding: 20px;
+    text-align: center;
+  }
+  .alert-card-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+  .alert-card-value {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .alert-card-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+  }
+  .val-danger { color: #ff4444; }
+  .val-warn { color: var(--gold); }
+  .val-ok { color: #6a9960; }
+  .val-neutral { color: var(--text2); }
+
+  .alert-map-wrap {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .alert-map-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text3);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .map-placeholder {
+    width: 100%;
+    height: 220px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .map-placeholder svg { width: 100%; height: 100%; opacity: 0.4; }
+  .map-dot {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .map-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    opacity: 0.4;
+    animation: pulse 2s ease-out infinite;
+  }
+  @keyframes pulse { 0%{transform:scale(1);opacity:0.4} 100%{transform:scale(2.5);opacity:0} }
+  .map-dot.red { background: var(--red2); color: var(--red2); }
+  .map-dot.gold { background: var(--gold); color: var(--gold); }
+  .map-dot.gray { background: var(--text3); color: var(--text3); }
+
+  .location-list {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .location-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text2);
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+  .loc-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .loc-dot.red { background: var(--red2); }
+  .loc-dot.gold { background: var(--gold); }
+  .loc-dot.gray { background: var(--text3); }
+  .loc-name { flex: 1; font-family: var(--serif); font-size: 12px; }
+  .loc-grade {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg3);
+    border-top: 1px solid var(--border);
+    padding: 40px 24px 24px;
+  }
+  .footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .footer-logo-ko {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gold3);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .footer-logo-en {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 14px;
+  }
+  .footer-desc {
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.7;
+    max-width: 280px;
+  }
+  .footer-col-title {
+    font-family: var(--serif);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    margin-bottom: 14px;
+    letter-spacing: 0.05em;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .footer-links a {
+    font-size: 11px;
+    color: var(--text3);
+    text-decoration: none;
+    transition: color 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  .footer-classify {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 3px 10px;
+    border: 1px solid var(--border2);
+    color: var(--text3);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── PAGE OVERLAY ── */
+  .page-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 500;
+    overflow-y: auto;
+  }
+  .page-overlay.active { display: block; }
+
+  .overlay-header {
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,8,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .overlay-title {
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .overlay-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px; height: 16px;
+    background: var(--gold3);
+  }
+  .overlay-close {
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 6px 14px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .overlay-close:hover { color: var(--gold); border-color: var(--gold3); }
+
+  .overlay-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* 페이지 공통 헤더 */
+  .page-hero {
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .page-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0;
+    width: 80px; height: 2px;
+    background: var(--gold3);
+  }
+  .page-hero-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold3);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .page-hero-title {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .page-hero-sub {
+    font-size: 14px;
+    color: var(--text3);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* 본문 공통 스타일 */
+  .prose h2 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .prose h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 18px;
+    background: var(--gold3);
+    flex-shrink: 0;
+  }
+  .prose h3 {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    margin: 28px 0 10px;
+    letter-spacing: 0.05em;
+  }
+  .prose p {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.9;
+    margin-bottom: 14px;
+  }
+  .prose .callout {
+    border-left: 3px solid var(--gold3);
+    padding: 14px 18px;
+    background: var(--surface);
+    margin: 20px 0;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+  .prose .callout.red {
+    border-color: var(--red2);
+    background: var(--red-dim);
+    color: #ffaaaa;
+  }
+
+  /* 테이블 */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+  .data-table th {
+    padding: 10px 16px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    background: var(--bg3);
+    border-bottom: 2px solid var(--border2);
+    white-space: nowrap;
+  }
+  .data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .data-table tr:hover td { background: var(--surface); }
+  .data-table .td-serif { font-family: var(--serif); color: var(--text-bright); font-size: 13px; }
+  .data-table .td-mono { font-family: var(--mono); font-size: 11px; }
+  .data-table .td-gold { color: var(--gold); font-family: var(--serif); }
+
+  /* 탭 */
+  .tab-nav {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 12px 20px;
+    font-family: var(--serif);
+    font-size: 13px;
+    color: var(--text3);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    white-space: nowrap;
+    margin-bottom: -1px;
+  }
+  .tab-btn:hover { color: var(--text2); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold3);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* 두 컬럼 레이아웃 */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 20px 0;
+  }
+  .info-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--gold3);
+    padding: 20px;
+  }
+  .info-block h4 {
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 14px;
+    letter-spacing: 0.05em;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    gap: 10px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { color: var(--text3); font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em; padding-top: 1px; flex-shrink: 0; }
+  .info-val { color: var(--text); text-align: right; line-height: 1.5; }
+
+  /* 등급 뱃지들 */
+  .grade-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    gap: 4px;
+  }
+  .grade-tag::before { content: '●'; font-size: 6px; }
+  .grade-w-tag { border: 1px solid var(--border2); color: var(--text3); }
+  .grade-w-tag::before { color: var(--text3); }
+  .grade-y-tag { border: 1px solid var(--gold3); color: var(--gold); background: rgba(200,169,110,0.06); }
+  .grade-y-tag::before { color: var(--gold); }
+  .grade-r-tag { border: 1px solid var(--red); color: var(--red2); background: var(--red-dim); }
+  .grade-r-tag::before { color: var(--red2); }
+  .grade-b-tag { border: 1px solid #1a1a60; color: #6060ff; background: #05050f; }
+  .grade-b-tag::before { color: #6060ff; }
+
+  /* 규칙 아코디언 */
+  .rule-item {
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .rule-item:hover { border-color: var(--border2); }
+  .rule-btn {
+    width: 100%;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    transition: background 0.15s;
+  }
+  .rule-btn:hover { background: var(--surface2); }
+  .rule-btn-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .rule-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red2);
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    border: 1px solid var(--red);
+    padding: 2px 7px;
+    background: var(--red-dim);
+  }
+  .rule-title {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+  }
+  .rule-arrow {
+    font-size: 10px;
+    color: var(--text3);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .rule-item.open .rule-arrow { transform: rotate(90deg); }
+  .rule-body {
+    display: none;
+    padding: 16px 20px 20px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+  .rule-item.open .rule-body { display: block; }
+  .rule-body p { font-size: 13px; color: var(--text2); line-height: 1.9; margin-bottom: 10px; }
+  .rule-body p:last-child { margin-bottom: 0; }
+
+  /* 사이 공간 카드들 */
+  .location-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .loc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .loc-card:hover { border-color: var(--border2); }
+  .loc-card-level {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .loc-card-level::before {
+    content: '';
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .level-danger .loc-card-level::before { background: var(--red2); box-shadow: 0 0 6px var(--red2); }
+  .level-warn .loc-card-level::before { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+  .level-normal .loc-card-level::before { background: var(--text3); }
+  .level-danger .loc-card-level { color: var(--red2); }
+  .level-warn .loc-card-level { color: var(--gold); }
+  .level-normal .loc-card-level { color: var(--text3); }
+  .loc-card-name {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .loc-card-desc {
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.7;
+  }
+  .loc-card-detail {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+  }
+
+  /* 존재 분류 테이블 꾸밈 */
+  .grade-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    border-radius: 0;
+  }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    margin-bottom: 32px;
+  }
+  .breadcrumb a { color: var(--text3); text-decoration: none; transition: color 0.15s; cursor: pointer; background: none; border: none; font-family: var(--mono); font-size: 10px; }
+  .breadcrumb a:hover { color: var(--gold); }
+  .breadcrumb span { color: var(--text3); }
+  .breadcrumb .current { color: var(--text2); }
+
+  /* ── 검색 ── */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    margin-bottom: 32px;
+    transition: border-color 0.2s;
+  }
+  .search-bar:focus-within { border-color: var(--gold3); }
+  .search-icon {
+    padding: 0 14px;
+    color: var(--text3);
+    font-size: 14px;
+  }
+  .search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 12px 0;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text);
+  }
+  .search-input::placeholder { color: var(--text3); }
+  .search-btn {
+    padding: 0 16px;
+    height: 100%;
+    background: var(--gold3);
+    border: none;
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-height: 44px;
+  }
+  .search-btn:hover { background: var(--gold); }
+
+  /* 게시판 */
+  .board-table { width: 100%; border-collapse: collapse; }
+  .board-table th {
+    padding: 10px 16px;
+    background: var(--bg3);
+    border-bottom: 2px solid var(--border2);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .board-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    vertical-align: middle;
+  }
+  .board-table tr:hover td { background: var(--surface); }
+  .board-num { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+  .board-title-cell { display: flex; align-items: center; gap: 8px; }
+  .board-date { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: 0.05em; white-space: nowrap; }
+  .board-dept { font-size: 11px; color: var(--text3); white-space: nowrap; }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 28px;
+  }
+  .page-btn {
+    width: 32px; height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .page-btn:hover { color: var(--gold); border-color: var(--gold3); }
+  .page-btn.active { background: var(--gold3); color: var(--bg); border-color: var(--gold3); }
+
+  /* ── 반응형 ── */
+  @media (max-width: 1100px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero-panel { max-width: 480px; }
+    .world-grid { grid-template-columns: repeat(2, 1fr); }
+    .alert-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 28px; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    nav { display: none; }
+    .hamburger { display: flex; }
+    .header-date { display: none; }
+    .hero { padding: 60px 20px 50px; }
+    .hero-kanji.k1 { font-size: 140px; }
+    .hero-kanji.k2 { display: none; }
+    section { padding: 56px 20px; }
+    .world-grid { grid-template-columns: 1fr; }
+    .alert-grid { grid-template-columns: repeat(2, 1fr); }
+    .notice-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; gap: 28px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .overlay-content { padding: 32px 20px 60px; }
+    .location-cards { grid-template-columns: 1fr; }
+    .board-table th:nth-child(3),
+    .board-table td:nth-child(3) { display: none; }
+  }
+  @media (max-width: 480px) {
+    .alert-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-btns { flex-direction: column; }
+    .hero-btns .btn-primary,
+    .hero-btns .btn-secondary { justify-content: center; }
+    .tab-btn { padding: 10px 14px; font-size: 12px; }
+    .board-table th:nth-child(4),
+    .board-table td:nth-child(4) { display: none; }
+    .alert-bar { padding: 6px 12px; }
+  }
+
+  /* 페이드인 */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- 경보 바 -->
+<div class="alert-bar">
+  <div class="alert-dot"></div>
+  <div class="alert-marquee">
+    <span>
+      [긴급] 결계 균열 진행 중 — 서울 자연결계 붕괴 위험도 「중기 후반」 진입 확인 &nbsp;&nbsp;|&nbsp;&nbsp;
+      종로 피맛골 일대 음계 침식 확대, 현장 출동 완료 &nbsp;&nbsp;|&nbsp;&nbsp;
+      한강 수온 이상 현상 6개월 연속 측정 중 &nbsp;&nbsp;|&nbsp;&nbsp;
+      지하철 3호선 무악재~독립문 구간 전자장비 오작동 지속 &nbsp;&nbsp;|&nbsp;&nbsp;
+      [공지] 안목 등록 갱신 기한 — 해당자 명경각 3과 방문 요망
+    </span>
+  </div>
+</div>
+
+<!-- 헤더 -->
+<header>
+  <div class="header-inner">
+    <a class="logo-wrap" href="#" onclick="showPage('main'); return false;">
+      <div class="logo-emblem">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="#c8a96e" stroke-width="1"/>
+          <circle cx="20" cy="20" r="13" stroke="#a07840" stroke-width="0.5"/>
+          <line x1="20" y1="2" x2="20" y2="38" stroke="#c8a96e" stroke-width="0.5" opacity="0.4"/>
+          <line x1="2" y1="20" x2="38" y2="20" stroke="#c8a96e" stroke-width="0.5" opacity="0.4"/>
+          <polygon points="20,8 23,17 32,17 25,23 28,32 20,26 12,32 15,23 8,17 17,17" fill="#c8a96e" opacity="0.7"/>
+          <circle cx="20" cy="20" r="3" fill="#c8a96e"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-ko">명경각(明鏡閣)</span>
+        <span class="logo-en">MYEONGGYEONG-GAK · NATIONAL OCCULT BUREAU</span>
+      </div>
+    </a>
+
+    <nav>
+      <div class="nav-item has-sub">기관 소개
+        <div class="dropdown">
+          <a href="#" onclick="showPage('intro'); return false;">기관 개요</a>
+          <a href="#" onclick="showPage('history'); return false;">연혁</a>
+          <a href="#" onclick="showPage('structure'); return false;">조직도</a>
+          <a href="#" onclick="showPage('law'); return false;">근거 법령</a>
+        </div>
+      </div>
+      <div class="nav-item has-sub">세계관 설정
+        <div class="dropdown">
+          <a href="#" onclick="showPage('world-structure'); return false;">삼계(三界) 구조</a>
+          <a href="#" onclick="showPage('world-rules'); return false;">불문율(不文律)</a>
+          <a href="#" onclick="showPage('world-factions'); return false;">신계 파벌</a>
+          <a href="#" onclick="showPage('world-locations'); return false;">사이 공간</a>
+        </div>
+      </div>
+      <div class="nav-item has-sub">존재 분류
+        <div class="dropdown">
+          <a href="#" onclick="showPage('beings-yin'); return false;">음계 존재</a>
+          <a href="#" onclick="showPage('beings-shaman'); return false;">무속 능력 체계</a>
+          <a href="#" onclick="showPage('beings-barrier'); return false;">결계 시스템</a>
+        </div>
+      </div>
+      <div class="nav-item has-sub">사회·조직
+        <div class="dropdown">
+          <a href="#" onclick="showPage('society'); return false;">인간 사회 구조</a>
+          <a href="#" onclick="showPage('bureau'); return false;">명경각 내부</a>
+          <a href="#" onclick="showPage('sindang'); return false;">신당 243</a>
+        </div>
+      </div>
+      <div class="nav-item has-sub">현황·경보
+        <div class="dropdown">
+          <a href="#" onclick="showPage('alert'); return false;">결계 붕괴 현황</a>
+          <a href="#" onclick="showPage('incidents'); return false;">사건 기록</a>
+          <a href="#" onclick="showPage('classified'); return false;">기밀 문서</a>
+        </div>
+      </div>
+      <div class="nav-item" onclick="showPage('board')">공지·게시판</div>
+    </nav>
+
+    <div class="header-right">
+      <div class="header-date" id="headerDate"></div>
+      <div class="clearance-badge">LEVEL-3</div>
+      <button class="hamburger" id="hamburger" onclick="toggleMobile()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- 모바일 메뉴 -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="sub-label">기관 소개</div>
+  <a href="#" onclick="showPage('intro'); toggleMobile(); return false;">기관 개요</a>
+  <a href="#" onclick="showPage('history'); toggleMobile(); return false;">연혁</a>
+  <a href="#" onclick="showPage('structure'); toggleMobile(); return false;">조직도</a>
+  <div class="sub-label">세계관 설정</div>
+  <a href="#" onclick="showPage('world-structure'); toggleMobile(); return false;">삼계(三界) 구조</a>
+  <a href="#" onclick="showPage('world-rules'); toggleMobile(); return false;">불문율(不文律)</a>
+  <a href="#" onclick="showPage('world-factions'); toggleMobile(); return false;">신계 파벌</a>
+  <a href="#" onclick="showPage('world-locations'); toggleMobile(); return false;">사이 공간</a>
+  <div class="sub-label">존재 분류</div>
+  <a href="#" onclick="showPage('beings-yin'); toggleMobile(); return false;">음계 존재</a>
+  <a href="#" onclick="showPage('beings-shaman'); toggleMobile(); return false;">무속 능력 체계</a>
+  <a href="#" onclick="showPage('beings-barrier'); toggleMobile(); return false;">결계 시스템</a>
+  <div class="sub-label">사회·조직</div>
+  <a href="#" onclick="showPage('society'); toggleMobile(); return false;">인간 사회 구조</a>
+  <a href="#" onclick="showPage('bureau'); toggleMobile(); return false;">명경각 내부</a>
+  <a href="#" onclick="showPage('sindang'); toggleMobile(); return false;">신당 243</a>
+  <div class="sub-label">현황·경보</div>
+  <a href="#" onclick="showPage('alert'); toggleMobile(); return false;">결계 붕괴 현황</a>
+  <a href="#" onclick="showPage('incidents'); toggleMobile(); return false;">사건 기록</a>
+  <a href="#" onclick="showPage('board'); toggleMobile(); return false;">공지·게시판</a>
+</div>
+
+<!-- ═══════════════════════════════════════
+     메인 페이지
+═══════════════════════════════════════ -->
+<div id="page-main">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-kanji k1">鏡</div>
+  <div class="hero-kanji k2">陰</div>
+
+  <div class="hero-inner">
+    <div>
+      <div class="hero-label">NATIONAL OCCULT BUREAU — EST. CLASSIFIED</div>
+      <h1 class="hero-title">
+        보이지 않는 것들을<br>
+        <span class="gold">관리한다</span>
+      </h1>
+      <div class="hero-subtitle">MYEONGGYEONG-GAK / 명경각(明鏡閣) / OFFICIAL PORTAL v4.7</div>
+      <p class="hero-desc">
+        명경각은 신계·음계와 인간계 사이의 균형을 유지하고 이상 현상을 관측·대응하는
+        국가 직속 비공개 관리국입니다. 본 포털은 내부 인가자 및 협력 기관 전용입니다.
+      </p>
+      <div class="hero-btns">
+        <a href="#" class="btn-primary" onclick="showPage('world-structure'); return false;">▶ 세계관 열람</a>
+        <a href="#" class="btn-secondary" onclick="showPage('alert'); return false;">◈ 현황 보고서</a>
+      </div>
+    </div>
+
+    <div class="hero-panel">
+      <div class="panel-header">
+        <div class="panel-title">SYSTEM STATUS / 시스템 현황</div>
+        <div class="panel-status">LIVE</div>
+      </div>
+      <div class="panel-body">
+        <div class="panel-row">
+          <div class="panel-key">결계 균열도</div>
+          <div class="panel-val warn">중기 후반 (67%)</div>
+        </div>
+        <div class="panel-row">
+          <div class="panel-key">음계 침식 구역</div>
+          <div class="panel-val warn">서울 내 7개소</div>
+        </div>
+        <div class="panel-row">
+          <div class="panel-key">미처리 의뢰</div>
+          <div class="panel-val">민간 12건 / 내부 3건</div>
+        </div>
+        <div class="panel-row">
+          <div class="panel-key">안목 등록자</div>
+          <div class="panel-val">공식 등록 247명</div>
+        </div>
+        <div class="panel-row">
+          <div class="panel-key">신계 접촉 현황</div>
+          <div class="panel-val warn">천신계 — 응답 없음</div>
+        </div>
+        <div class="panel-row">
+          <div class="panel-key">긴급 출동 대기</div>
+          <div class="panel-val ok">2팀 대기 중</div>
+        </div>
+        <div class="panel-progress">
+          <div class="progress-label">
+            <span>결계 붕괴 진행도</span>
+            <span style="color:var(--red2)">67% / 임계점 85%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:67%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 공지 -->
+<section class="notices-section">
+  <div class="section-inner">
+    <div class="notice-grid">
+      <div class="notice-col">
+        <div class="notice-col-header">
+          <div class="notice-col-title">긴급 공지</div>
+          <div class="notice-col-badge badge-red">긴급</div>
+        </div>
+        <ul class="notice-list">
+          <li class="notice-item" onclick="showPage('board')">
+            <div class="notice-grade grade-b">흑</div>
+            <div class="notice-content">
+              <div class="notice-title-text">[흑등급] 한강 노들섬 북단 음계 고착 존재 발생 — 강제 추방 실패</div>
+              <div class="notice-meta"><span>2024.12.19</span><span>3과</span></div>
+            </div>
+            <div class="notice-new"></div>
+          </li>
+          <li class="notice-item" onclick="showPage('board')">
+            <div class="notice-grade grade-r">적</div>
+            <div class="notice-content">
+              <div class="notice-title-text">[적등급] 종로 피맛골 공간 왜곡 2단계 진입 — 민간 접근 통제 요청</div>
+              <div class="notice-meta"><span>2024.12.17</span><span>1과</span></div>
+            </div>
+            <div class="notice-new"></div>
+          </li>
+          <li class="notice-item" onclick="showPage('board')">
+            <div class="notice-grade grade-r">적</div>
+            <div class="notice-content">
+              <div class="notice-title-text">북악산 숙정문 인근 결계 약화 보고 — 긴급 갱신 작업 지시</div>
+              <div class="notice-meta"><span>2024.12.15</span><span>2과</span></div>
+            </div>
+          </li>
+          <li class="notice-item" onclick="showPage('board')">
+            <div class="notice-grade grade-y">황</div>
+            <div class="notice-content">
+              <div class="notice-title-text">지하철 3호선 야간 운행 구간 음계 노출 수치 증가</div>
+              <div class="notice-meta"><span>2024.12.12</span><span>조사팀</span></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="notice-col">
+        <div class="notice-col-header">
+          <div class="notice-col-title">일반 공지</div>
+          <div class="notice-col-badge badge-gold">공지</div>
+        </div>
+        <ul class="notice-list">
+          <li class="notice-item" onclick="showPage('board')">
+            <div class="notice-grade grade-y">황</div>
+            <div class="notice-content">
+              <div class="notice-title-text">2025년 1분기 안목 보유자 정기 등록 갱신 안내</div>
+              <div class="notice-meta"><span>2024.12.10</span><span>관리과</span></div>
+            </div>
+            <div class="notice-new"></div>
+          </li>
+          <li class="notice-item" onclick="showPage('board')">
+            <div class="notice-grade grade-w">백</div>
+            <div class="notice-content">
+              <div class="notice-title-text">신당 243 협력 기관 등록 현황 갱신 — 12월 기준</div>
+              <div class="notice-meta"><span>2024.12.08</span><span>총무과</span></div>
+            </div>
+          </li>
+          <li class="notice-item" onclick="showPage('board')">
+            <div class="notice-grade grade-w">백</div>
+            <div class="notice-content">
+              <div class="notice-title-text">결계 부적 표준 규격 개정안 배포 — 무격청 공동 작성</div>
+              <div class="notice-meta"><span>2024.12.05</span><span>기술과</span></div>
+            </div>
+          </li>
+          <li class="notice-item" onclick="showPage('board')">
+            <div class="notice-grade grade-w">백</div>
+            <div class="notice-content">
+              <div class="notice-title-text">연말 정기 보고서 제출 기한 안내 (12월 31일)</div>
+              <div class="notice-meta"><span>2024.12.01</span><span>총무과</span></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 세계관 카드 -->
+<section style="background:var(--bg);">
+  <div class="section-inner">
+    <div class="section-header fade-in">
+      <div>
+        <div class="section-label">WORLD SETTINGS</div>
+        <h2 class="section-title">세계관 설정</h2>
+        <div class="section-line"></div>
+      </div>
+      <button class="section-more" onclick="showPage('world-structure')">전체 열람</button>
+    </div>
+    <div class="world-grid fade-in">
+      <button class="world-card" onclick="showPage('world-structure')">
+        <div class="world-card-icon">🌌</div>
+        <div class="world-card-num">SETTING / 01</div>
+        <div class="world-card-title">삼계(三界) 구조</div>
+        <div class="world-card-desc">신계·인간계·음계로 이루어진 세계의 기본 구조와 각 층위의 특성, 사이 공간 목록을 수록한다.</div>
+        <div class="world-card-link">자세히 보기</div>
+      </button>
+      <button class="world-card" onclick="showPage('world-rules')">
+        <div class="world-card-icon">⛓️</div>
+        <div class="world-card-num">SETTING / 02</div>
+        <div class="world-card-title">불문율(不文律)</div>
+        <div class="world-card-desc">세계를 유지하는 다섯 가지 법칙. 위반 시 대가와 신병 단계, 이름의 법칙 등을 포함한다.</div>
+        <div class="world-card-link">자세히 보기</div>
+      </button>
+      <button class="world-card" onclick="showPage('world-factions')">
+        <div class="world-card-icon">⚔️</div>
+        <div class="world-card-num">SETTING / 03</div>
+        <div class="world-card-title">신계 파벌</div>
+        <div class="world-card-desc">천신계·지신계·무신계·수신계 네 파벌의 성향, 무당과의 관계, 현재 진행 중인 갈등 구조.</div>
+        <div class="world-card-link">자세히 보기</div>
+      </button>
+      <button class="world-card" onclick="showPage('beings-yin')">
+        <div class="world-card-icon">👻</div>
+        <div class="world-card-num">SETTING / 04</div>
+        <div class="world-card-title">음계 존재 분류</div>
+        <div class="world-card-desc">유혼부터 음괴까지 5등급 분류 체계와 각 존재의 특성, 위협도, 처리 방법.</div>
+        <div class="world-card-link">자세히 보기</div>
+      </button>
+      <button class="world-card" onclick="showPage('beings-shaman')">
+        <div class="world-card-icon">🪬</div>
+        <div class="world-card-num">SETTING / 05</div>
+        <div class="world-card-title">무속 능력 체계</div>
+        <div class="world-card-desc">신내림형·접신형·독립형 세 가지 능력 유형과 부적·굿·진언·신점 술법 분류.</div>
+        <div class="world-card-link">자세히 보기</div>
+      </button>
+      <button class="world-card" onclick="showPage('alert')">
+        <div class="world-card-icon">🔴</div>
+        <div class="world-card-num">CURRENT / 01</div>
+        <div class="world-card-title">결계 붕괴 현황</div>
+        <div class="world-card-desc">서울 자연결계 균열 진행 현황, 이상 현상 목록, 신계별 대응 상태 실시간 기록.</div>
+        <div class="world-card-link">현황 열람</div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- 경보 현황 요약 -->
+<section class="alert-section">
+  <div class="section-inner">
+    <div class="section-header fade-in">
+      <div>
+        <div class="section-label">CURRENT STATUS</div>
+        <h2 class="section-title">서울 음계 침식 현황</h2>
+        <div class="section-line"></div>
+      </div>
+      <button class="section-more" onclick="showPage('alert')">전체 보고서</button>
+    </div>
+
+    <div class="alert-grid fade-in">
+      <div class="alert-card">
+        <div class="alert-card-label">결계 균열도</div>
+        <div class="alert-card-value val-danger">67%</div>
+        <div class="alert-card-sub">임계점 85%</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-card-label">음계 침식 구역</div>
+        <div class="alert-card-value val-warn">7</div>
+        <div class="alert-card-sub">서울 내 확인 구역</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-card-label">고착 존재 수</div>
+        <div class="alert-card-value val-danger">3</div>
+        <div class="alert-card-sub">48h 초과 미처리</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-card-label">최근 실종 사건</div>
+        <div class="alert-card-value val-neutral">3건</div>
+        <div class="alert-card-sub">종로 일대 / 6개월</div>
+      </div>
+    </div>
+
+    <div class="alert-map-wrap fade-in">
+      <div class="alert-map-title">서울 사이 공간 분포 — 음계 밀도 현황</div>
+      <div class="map-placeholder">
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="300" fill="#0f0f0c"/>
+          <path d="M100,150 Q150,120 200,140 Q250,160 300,130 Q350,100 400,120 Q450,140 500,110 Q550,80 600,100 Q650,120 700,100" stroke="#2a2a1e" stroke-width="1" fill="none"/>
+          <path d="M150,200 Q200,180 250,190 Q300,200 350,180 Q400,160 450,170 Q500,180 550,165 Q600,150 650,160" stroke="#2a2a1e" stroke-width="1" fill="none"/>
+          <rect x="60" y="60" width="680" height="180" rx="2" fill="none" stroke="#2a2a1e" stroke-width="0.5"/>
+          <text x="400" y="155" text-anchor="middle" fill="#2a2a1e" font-size="40" font-family="serif" font-weight="900">서울</text>
+          <text x="400" y="195" text-anchor="middle" fill="#1a1a14" font-size="12" font-family="monospace" letter-spacing="3">SEOUL</text>
+        </svg>
+        <!-- 위치 마커들 -->
+        <div class="map-dot red" style="left:38%;top:55%" title="한강 노들섬"></div>
+        <div class="map-dot red" style="left:52%;top:42%" title="종로 피맛골"></div>
+        <div class="map-dot gold" style="left:45%;top:28%" title="북악산 숙정문"></div>
+        <div class="map-dot gold" style="left:49%;top:50%" title="지하철 3호선"></div>
+        <div class="map-dot red" style="left:30%;top:45%" title="은평구 신사동"></div>
+        <div class="map-dot gray" style="left:60%;top:60%" title="강남 일대"></div>
+        <div class="map-dot gray" style="left:65%;top:38%" title="성동구"></div>
+      </div>
+      <div class="location-list">
+        <div class="location-item">
+          <div class="loc-dot red"></div>
+          <div class="loc-name">한강 노들섬 북단</div>
+          <div class="loc-grade">침식 진행</div>
+        </div>
+        <div class="location-item">
+          <div class="loc-dot red"></div>
+          <div class="loc-name">종로 피맛골 막다른 골목</div>
+          <div class="loc-grade">공간 왜곡</div>
+        </div>
+        <div class="location-item">
+          <div class="loc-dot gold"></div>
+          <div class="loc-name">북악산 숙정문 인근</div>
+          <div class="loc-grade">결계 약화</div>
+        </div>
+        <div class="location-item">
+          <div class="loc-dot gold"></div>
+          <div class="loc-name">지하철 3호선 특정 구간</div>
+          <div class="loc-grade">음계 노출</div>
+        </div>
+        <div class="location-item">
+          <div class="loc-dot red"></div>
+          <div class="loc-name">은평구 신사동 일대</div>
+          <div class="loc-grade">밀도 상승</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page-main -->
+
+
+<!-- ═══════════════════════════════════════
+     서브 페이지들 (오버레이 방식)
+═══════════════════════════════════════ -->
+
+<!-- 기관 개요 -->
+<div class="page-overlay" id="page-intro">
+  <div class="overlay-header">
+    <div class="overlay-title">기관 개요</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button>
+      <span>/</span>
+      <span class="current">기관 소개 — 기관 개요</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">ORGANIZATION / OVERVIEW</div>
+      <h1 class="page-hero-title">명경각(明鏡閣)<br>기관 개요</h1>
+      <p class="page-hero-sub">국가 직속 비공개 초자연 관리 기관. 공식 존재가 확인되지 않는다.</p>
+    </div>
+    <div class="prose">
+      <div class="callout red">⚠ 본 문서는 보안 등급 3 이상 인가자에게만 공개됩니다. 무단 유출 시 관련 법령에 따라 처리됩니다.</div>
+      <h2>설립 목적</h2>
+      <p>명경각은 인간계와 신계·음계 사이의 경계 유지, 이상 현상 관측 및 대응, 안목 보유자 관리, 민간 무속계 통제를 목적으로 설립된 국가 기관이다. 공식 정부 조직표에는 등재되어 있지 않으며, 예산 집행은 별도 항목으로 처리된다.</p>
+      <p>설립 연도는 공개 문서에 기재되지 않는다. 내부 자료에 따르면 현재 체계의 전신은 조선 후기 관청 구조를 일부 계승했다.</p>
+      <h2>주요 임무</h2>
+      <div class="two-col">
+        <div class="info-block">
+          <h4>🔍 관측 및 기록</h4>
+          <div class="info-row"><div class="info-key">대상</div><div class="info-val">서울 전역 음계 밀도, 결계 균열도, 사이 공간 상태</div></div>
+          <div class="info-row"><div class="info-key">주기</div><div class="info-val">72시간 단위 정기 측정 + 이상 시 즉시 보고</div></div>
+          <div class="info-row"><div class="info-key">담당</div><div class="info-val">조사과 (1과 산하)</div></div>
+        </div>
+        <div class="info-block">
+          <h4>🛡️ 결계 관리</h4>
+          <div class="info-row"><div class="info-key">업무</div><div class="info-val">자연결계 보강, 인공결계 신규 설치·갱신</div></div>
+          <div class="info-row"><div class="info-key">협력</div><div class="info-val">무격청 기술 지원, 민간 무당 용역</div></div>
+          <div class="info-row"><div class="info-key">담당</div><div class="info-val">기술과 (2과 산하)</div></div>
+        </div>
+        <div class="info-block">
+          <h4>👁️ 안목 보유자 관리</h4>
+          <div class="info-row"><div class="info-key">등록</div><div class="info-val">전국 공식 등록 247명 (비공개 추정 포함 시 1,000+)</div></div>
+          <div class="info-row"><div class="info-key">관리</div><div class="info-val">정기 갱신, 능력 등급 재평가, 포섭 또는 통제</div></div>
+          <div class="info-row"><div class="info-key">담당</div><div class="info-val">관리과 (3과)</div></div>
+        </div>
+        <div class="info-block">
+          <h4>🔒 은폐 및 통제</h4>
+          <div class="info-row"><div class="info-key">업무</div><div class="info-val">민간 목격 사건 처리, 언론 통제, 기록 말소</div></div>
+          <div class="info-row"><div class="info-key">협력</div><div class="info-val">경찰청 특수 라인, 국가정보원 비공개 채널</div></div>
+          <div class="info-row"><div class="info-key">담당</div><div class="info-val">대외과 (4과)</div></div>
+        </div>
+      </div>
+      <h2>신당 243과의 관계</h2>
+      <p>신당 243은 명경각 공식 소속이 아닌 민간 사설 기관이다. 그러나 실질적인 현장 처리 능력과 네트워크를 고려해 명경각은 비공식 협력 관계를 유지하고 있다. 명경각 내부에서는 신당 243을 "통제되지 않는 변수"로 분류하며, 필요 시 활용하되 기본적으로는 감시 대상이다.</p>
+      <div class="callout">내부 분류 코드 — 신당 243: <strong style="color:var(--gold)">CLASS-C / 협력·감시 병행</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- 연혁 -->
+<div class="page-overlay" id="page-history">
+  <div class="overlay-header">
+    <div class="overlay-title">연혁</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <button onclick="showPage('intro')">기관 소개</button><span>/</span>
+      <span class="current">연혁</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">ORGANIZATION / HISTORY</div>
+      <h1 class="page-hero-title">기관 연혁</h1>
+      <p class="page-hero-sub">공개 가능 범위 내의 기록. 다수 항목은 기밀 처리됨.</p>
+    </div>
+    <div class="prose">
+      <div class="callout red">⚠ 이 문서에 수록된 일부 연도 및 사건은 보안상 이유로 ██ 처리되었습니다.</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>연도</th><th>사건</th><th>비고</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="td-mono">19██</td><td class="td-serif">전신 기관 「██청」 설립. 조선 후기 무관청 일부 기능 계승</td><td class="td-mono" style="color:var(--text3)">기밀</td></tr>
+          <tr><td class="td-mono">19██</td><td>한국전쟁 직후 서울 전역 음계 밀도 이상 급증. 현 조직 체계 정비</td><td class="td-mono" style="color:var(--text3)">부분 공개</td></tr>
+          <tr><td class="td-mono">1987</td><td>안목 보유자 공식 등록 제도 최초 시행</td><td class="td-mono" style="color:var(--gold)">공개</td></tr>
+          <tr><td class="td-mono">1994</td><td>서울 지하철 3호선 공사 중 최초 음계 포인트 발견 — 무악재 구간</td><td class="td-mono" style="color:var(--text3)">부분 공개</td></tr>
+          <tr><td class="td-mono">2003</td><td>결계 표준 측정 체계 도입. 균열도 수치화 시작</td><td class="td-mono" style="color:var(--gold)">공개</td></tr>
+          <tr><td class="td-mono">2011</td><td>신당 243 설립. 명경각과 비공식 협력 관계 형성 시작</td><td class="td-mono" style="color:var(--gold)">공개</td></tr>
+          <tr><td class="td-mono">2019</td><td>결계 균열도 50% 돌파 — 최초 「중기」 단계 진입</td><td class="td-mono" style="color:var(--text3)">부분 공개</td></tr>
+          <tr><td class="td-mono">2023</td><td>한강 수온 이상, 종로 실종 사건 연속 발생. 결계 붕괴 카운트다운 공식화</td><td class="td-mono" style="color:var(--red2)">내부 공개</td></tr>
+          <tr><td class="td-mono">2024</td><td>균열도 67% 돌파. 「중기 후반」 단계 진입. 천신계 응답 두절</td><td class="td-mono" style="color:var(--red2)">현재 진행</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 조직도 -->
+<div class="page-overlay" id="page-structure">
+  <div class="overlay-header">
+    <div class="overlay-title">조직도</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <button onclick="showPage('intro')">기관 소개</button><span>/</span>
+      <span class="current">조직도</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">ORGANIZATION / STRUCTURE</div>
+      <h1 class="page-hero-title">조직도</h1>
+      <p class="page-hero-sub">명경각 내부 구조. 일부 부서는 존재 자체가 비공개.</p>
+    </div>
+    <div class="prose">
+      <table class="data-table">
+        <thead><tr><th>부서</th><th>명칭</th><th>주요 업무</th><th>인원</th></tr></thead>
+        <tbody>
+          <tr><td class="td-mono">국장실</td><td class="td-serif">명경각 국장</td><td>총괄 지휘, 신계 공식 채널 관리</td><td class="td-mono">1 (신원 비공개)</td></tr>
+          <tr><td class="td-mono">1과</td><td class="td-serif">조사과</td><td>음계 밀도 측정, 결계 균열 모니터링, 현장 조사</td><td class="td-mono">분류됨</td></tr>
+          <tr><td class="td-mono">2과</td><td class="td-serif">기술과</td><td>결계 설치·갱신, 부적 표준화, 무격청 기술 연계</td><td class="td-mono">분류됨</td></tr>
+          <tr><td class="td-mono">3과</td><td class="td-serif">관리과</td><td>안목 보유자 등록·관리, 능력 등급 평가, 포섭</td><td class="td-mono">분류됨</td></tr>
+          <tr><td class="td-mono">4과</td><td class="td-serif">대외과</td><td>민간 사건 은폐, 언론 통제, 외부 기관 연락</td><td class="td-mono">분류됨</td></tr>
+          <tr><td class="td-mono">특수팀</td><td class="td-serif" style="color:var(--red2)">██팀</td><td style="color:var(--text3)">██████████████████</td><td class="td-mono" style="color:var(--text3)">기밀</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">무격청(巫覡廳)은 명경각과 별개 조직이나 기술 지원 협약을 체결하고 있습니다. 무격청은 신계 천신 계열의 직접 지원을 받으며, 명경각을 하위 파트너로 인식합니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 근거 법령 -->
+<div class="page-overlay" id="page-law">
+  <div class="overlay-header">
+    <div class="overlay-title">근거 법령</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <button onclick="showPage('intro')">기관 소개</button><span>/</span>
+      <span class="current">근거 법령</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">LEGAL BASIS</div>
+      <h1 class="page-hero-title">근거 법령</h1>
+      <p class="page-hero-sub">명경각 운영 및 권한의 법적 근거. 비공개 특별법 기반.</p>
+    </div>
+    <div class="prose">
+      <div class="callout red">⚠ 아래 법령은 국가보안법 제8조에 의거 일반 공개가 제한됩니다.</div>
+      <h2>주요 법령</h2>
+      <table class="data-table">
+        <thead><tr><th>법령명</th><th>주요 내용</th><th>공개 여부</th></tr></thead>
+        <tbody>
+          <tr><td class="td-serif">이계관리특별법 제1조</td><td>명경각의 설치 근거 및 목적 규정</td><td class="td-mono" style="color:var(--red2)">비공개</td></tr>
+          <tr><td class="td-serif">안목보유자관리령 제3조</td><td>안목 보유자 강제 등록 의무, 능력 제한 범위</td><td class="td-mono" style="color:var(--red2)">비공개</td></tr>
+          <tr><td class="td-serif">음계침식방지에관한규정</td><td>음계 존재 강제 추방, 결계 긴급 설치 권한</td><td class="td-mono" style="color:var(--text3)">내부 공개</td></tr>
+          <tr><td class="td-serif">민간무속업자관리규칙</td><td>무당·법사 등록, 미등록자 단속 권한</td><td class="td-mono" style="color:var(--gold)">부분 공개</td></tr>
+          <tr><td class="td-serif">██████특별령 제██조</td><td style="color:var(--text3)">██████████████████</td><td class="td-mono" style="color:var(--text3)">기밀</td></tr>
+        </tbody>
+      </table>
+      <h2>48시간 법칙과 법적 처리</h2>
+      <p>음계침식방지에관한규정 제7조에 따라, 음계 존재의 인간계 체류가 48시간을 초과하는 것으로 판단되는 경우 명경각 소속 처리 요원은 강제 추방 조치를 집행할 수 있다. 단, 집착령 이상 등급의 존재에 대한 처리는 2과 기술 지원이 필수적이다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 삼계 구조 -->
+<div class="page-overlay" id="page-world-structure">
+  <div class="overlay-header">
+    <div class="overlay-title">삼계(三界) 구조</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">세계관 설정 — 삼계 구조</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">WORLD SETTING / 01</div>
+      <h1 class="page-hero-title">삼계(三界) 구조</h1>
+      <p class="page-hero-sub">세계를 이루는 세 개의 층위와 그 관계. 명경각 내부 교육 자료 발췌.</p>
+    </div>
+    <div class="prose">
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab(this,'tab-overview')">개요</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-shin')">신계(神界)</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-human')">인간계(人間界)</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-yin')">음계(陰界)</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-locations')">사이 공간</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-overview">
+        <p>세계는 하나의 축(軸)으로 연결된 세 개의 층으로 이루어진다. 이 축을 <strong style="color:var(--gold)">「천지간(天地間)」</strong>이라 부르며, 무당만이 이 축을 따라 의식을 올릴 수 있다.</p>
+        <table class="data-table">
+          <thead><tr><th>층위</th><th>명칭</th><th>위치</th><th>주요 존재</th><th>시간 흐름</th></tr></thead>
+          <tbody>
+            <tr><td class="td-mono" style="color:var(--gold)">上</td><td class="td-serif">신계(神界)</td><td>차원적 상위 레이어</td><td>신들, 신수</td><td>1일 = 인간계 약 1년</td></tr>
+            <tr><td class="td-mono" style="color:var(--text2)">中</td><td class="td-serif">인간계(人間界)</td><td>현실 서울</td><td>인간, 안목 보유자</td><td>정상</td></tr>
+            <tr><td class="td-mono" style="color:var(--red2)">下</td><td class="td-serif">음계(陰界)</td><td>인간계 하위 겹침</td><td>유혼, 원귀, 요괴</td><td>항상 어둠, 시간 희박</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">세 층위는 서울이라는 공간에서 가장 밀접하게 겹쳐 있다. 이것이 서울에서 이상 현상이 집중 발생하는 이유다.</div>
+      </div>
+
+      <div class="tab-panel" id="tab-shin">
+        <h3>신계(神界) — 上</h3>
+        <p>특정 지리적 공간이 아닌 차원적 상위 레이어. 인간계 위에 겹쳐 존재한다. 신들은 신계에서 인간계를 내려다볼 수 있지만 직접 개입은 원칙적으로 금지되어 있다.</p>
+        <p>신계 내부는 관청 구조로 이루어져 있다. 인간의 조선 관료제를 모델로 한 위계질서가 그대로 유지되고 있으며, 신들도 탄핵되거나 강등된다. 인간의 신앙심이 줄면 신의 권력도 줄어든다.</p>
+        <h3>신계의 3대 부서</h3>
+        <table class="data-table">
+          <thead><tr><th>부서</th><th>관할</th><th>수장</th></tr></thead>
+          <tbody>
+            <tr><td class="td-serif td-gold">천부(天府)</td><td>자연·기후·운명의 큰 흐름</td><td>옥황상제 계열</td></tr>
+            <tr><td class="td-serif td-gold">명부(冥府)</td><td>죽음·저승·윤회</td><td>염라대왕</td></tr>
+            <tr><td class="td-serif td-gold">지부(地府)</td><td>땅·지역·인간 생활</td><td>토지신·성황신 계열</td></tr>
+          </tbody>
+        </table>
+        <div class="callout">세 부서는 항상 협력하지 않는다. 관할권 분쟁이 잦고, 이것이 인간계 사건의 직접적인 원인이 되는 경우가 많다.</div>
+      </div>
+
+      <div class="tab-panel" id="tab-human">
+        <h3>인간계(人間界) — 中</h3>
+        <p>현대 서울을 중심으로 한 현실 세계. 인간계는 신계와 음계 사이에서 완충재 역할을 한다. 이 완충이 무너지면 위아래가 인간계로 침투하기 시작한다.</p>
+        <div class="callout">현재 서울 자연결계 균열로 인해 완충 기능이 저하 중. 균열도 67% 도달.</div>
+        <h3>인식 가능자 분류</h3>
+        <table class="data-table">
+          <thead><tr><th>분류</th><th>설명</th><th>추정 비율</th></tr></thead>
+          <tbody>
+            <tr><td class="td-serif td-gold">안목(眼目) 보유자</td><td>신계·음계 존재를 선천적으로 시각 식별 가능</td><td class="td-mono">전체 0.3%</td></tr>
+            <tr><td class="td-serif">반목(半目) 보유자</td><td>시각 인식 불가, 감각으로만 느낌. 수련으로 발전 가능</td><td class="td-mono">전체 5%</td></tr>
+            <tr><td class="td-serif" style="color:var(--text3)">완전 불감자</td><td>아무것도 인식 불가. 영향은 받음 (불면, 우울, 사고)</td><td class="td-mono">나머지</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-panel" id="tab-yin">
+        <h3>음계(陰界) — 下</h3>
+        <p>인간계 아래 겹쳐 있는 층. 미련, 원한, 공포가 물질화된 공간이다. 저승(명부)과는 다르다 — 음계는 정식 사후세계가 아닌 체류 공간이다.</p>
+        <p>음계에 오래 머문 존재일수록 형태가 무너지고 원초적 감정 덩어리가 된다. 음계에는 낮이 없다. 항상 흐릿한 어둠이다.</p>
+        <h3>음계 침식 조건</h3>
+        <p>인간계의 감정 폭발 — 공황, 분노, 슬픔이 강할 때 음계가 얇아진다. 이 때 음계 존재들이 인간계로 새어나오기 쉬워진다. 현재 서울의 결계 약화와 맞물려 침식 위험이 급격히 증가하고 있다.</p>
+        <div class="callout red">⚠ 인간계 대규모 죽음이 발생했던 장소는 음계가 특히 두껍게 쌓여 있다. 종로 일대, 한강 수변 등이 해당.</div>
+      </div>
+
+      <div class="tab-panel" id="tab-locations">
+        <h3>사이 공간 — 「경계 지점」 목록</h3>
+        <p>완전히 인간계도, 음계도 아닌 경계 지점들. 서울 곳곳에 분포하며, 명경각이 공식 관리 중이다.</p>
+        <div class="location-cards">
+          <div class="loc-card level-danger">
+            <div class="loc-card-level">침식 진행 중</div>
+            <div class="loc-card-name">한강 노들섬 북쪽 수변</div>
+            <div class="loc-card-desc">물과 땅의 경계 지점. 익사자 원혼이 밀집된 구역. 현재 음계 고착 존재 1기 확인.</div>
+            <div class="loc-card-detail">최근 측정: 음계 밀도 8.7 / 기준치 3.0 초과</div>
+          </div>
+          <div class="loc-card level-danger">
+            <div class="loc-card-level">공간 왜곡 2단계</div>
+            <div class="loc-card-name">종로 피맛골 막다른 골목</div>
+            <div class="loc-card-desc">조선시대 처형지 위에 세워진 곳. 원귀 다수 잔존. 공간 왜곡이 주간에도 확인됨.</div>
+            <div class="loc-card-detail">실종 사건 연관 구역 — 민간 접근 통제 중</div>
+          </div>
+          <div class="loc-card level-warn">
+            <div class="loc-card-level">결계 약화</div>
+            <div class="loc-card-name">지하철 3호선 무악재~독립문</div>
+            <div class="loc-card-desc">터널이 옛 처형장 지하를 통과. 야간 음계 노출 수치 지속 증가. 전자장비 오작동 반복.</div>
+            <div class="loc-card-detail">야간 22:00 이후 단독 접근 금지 권고</div>
+          </div>
+          <div class="loc-card level-warn">
+            <div class="loc-card-level">신계 연결 포인트</div>
+            <div class="loc-card-name">북악산 숙정문 인근</div>
+            <div class="loc-card-desc">조선 금표비 구역. 신계와 연결된 고지대 포인트. 결계 약화로 신계 압력이 간헐적으로 감지됨.</div>
+            <div class="loc-card-detail">긴급 결계 갱신 작업 완료 (2024.12)</div>
+          </div>
+          <div class="loc-card level-danger">
+            <div class="loc-card-level">자연결계 밀집</div>
+            <div class="loc-card-name">은평구 신사동 243번지 일대</div>
+            <div class="loc-card-desc">무속 밀집 지역. 자연발생적 결계 형성. 신당 243 위치. 현재 자연결계 붕괴로 밀도 이상 상승 중.</div>
+            <div class="loc-card-detail">신당 243 비공식 모니터링 중</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 불문율 -->
+<div class="page-overlay" id="page-world-rules">
+  <div class="overlay-header">
+    <div class="overlay-title">불문율(不文律)</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">세계관 설정 — 불문율</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">WORLD SETTING / 02</div>
+      <h1 class="page-hero-title">불문율(不文律)</h1>
+      <p class="page-hero-sub">세계를 유지하는 다섯 가지 법칙. 누가 만들었는지 아무도 모른다.</p>
+    </div>
+    <div class="prose">
+      <div class="callout red">⚠ 불문율은 성문화된 규칙이 아닙니다. 어기면 반드시 대가가 따르며, 예외는 확인된 바 없습니다.</div>
+
+      <div class="rule-item" id="rule1">
+        <button class="rule-btn" onclick="toggleRule('rule1')">
+          <div class="rule-btn-left">
+            <div class="rule-num">제 1계</div>
+            <div class="rule-title">불개입(不介入) — 신은 인간계에 직접 개입할 수 없다</div>
+          </div>
+          <div class="rule-arrow">▶</div>
+        </button>
+        <div class="rule-body">
+          <p>신이 무당 없이 인간계에 강림하면 주변 반경의 현실이 붕괴된다. 신체를 가진 존재(인간, 신수)를 통해서만 간접 행동이 가능하다.</p>
+          <p>단, 신내림 상태의 무당은 예외로 인정된다 — 인간이 자발적으로 그릇이 되었으므로.</p>
+          <p><strong style="color:var(--red2)">위반 시 결과:</strong> 해당 신의 신계 권력 일시 정지 + 강림 지점 현실 균열 발생.</p>
+        </div>
+      </div>
+
+      <div class="rule-item" id="rule2">
+        <button class="rule-btn" onclick="toggleRule('rule2')">
+          <div class="rule-btn-left">
+            <div class="rule-num">제 2계</div>
+            <div class="rule-title">등가교환(等價交換) — 신에게 무언가를 받으면 반드시 내놓아야 한다</div>
+          </div>
+          <div class="rule-arrow">▶</div>
+        </button>
+        <div class="rule-body">
+          <p>무당이 신의 힘을 빌릴 때마다 수명, 건강, 감각 중 하나가 소모된다. 굿 한 번에 소모되는 양은 사건의 규모에 비례한다.</p>
+          <p>이를 무시하고 계속 사용하면 신병(神病)으로 발전한다.</p>
+          <table class="data-table" style="margin-top:12px">
+            <thead><tr><th>단계</th><th>증상</th></tr></thead>
+            <tbody>
+              <tr><td class="td-mono">1단계</td><td>원인불명 고열, 환청, 수면 장애</td></tr>
+              <tr><td class="td-mono">2단계</td><td>환각 (신과 귀신이 구분 없이 보임), 현실 인식 혼란</td></tr>
+              <tr><td class="td-mono">3단계</td><td>의지와 무관하게 신이 몸을 점거, 자아 소실 위험</td></tr>
+              <tr><td class="td-mono" style="color:var(--red2)">말기</td><td style="color:var(--red2)">완전한 신의 그릇이 되거나, 폐인</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rule-item" id="rule3">
+        <button class="rule-btn" onclick="toggleRule('rule3')">
+          <div class="rule-btn-left">
+            <div class="rule-num">제 3계</div>
+            <div class="rule-title">48시간 법칙 — 음계 존재가 48시간 이상 머물면 현실이 침식된다</div>
+          </div>
+          <div class="rule-arrow">▶</div>
+        </button>
+        <div class="rule-body">
+          <p>침식 징후: 주변 온도 급강하 → 물체 자연 이동 → 공간 왜곡 → 타인에게도 존재가 보이기 시작.</p>
+          <p>48시간을 넘기면 음계 존재가 인간계에 고착된다. 자력으로 돌아갈 수 없게 되며, 고착된 존재는 점점 형태를 잃고 재해급 음기 덩어리가 된다.</p>
+          <p><strong style="color:var(--red2)">현재:</strong> 한강 노들섬 고착 존재 1기 미처리 상태. 강제 추방 2회 실패.</p>
+        </div>
+      </div>
+
+      <div class="rule-item" id="rule4">
+        <button class="rule-btn" onclick="toggleRule('rule4')">
+          <div class="rule-btn-left">
+            <div class="rule-num">제 4계</div>
+            <div class="rule-title">이름의 법칙 — 진짜 이름을 알면 그 존재를 지배할 수 있다</div>
+          </div>
+          <div class="rule-arrow">▶</div>
+        </button>
+        <div class="rule-body">
+          <p>신, 귀신, 요괴 모두 진명(眞名)이 있다. 진명을 알고 부르면 그 존재는 명령에 저항하기 어려워진다.</p>
+          <p>반대로 무당도 신에게 진명을 불리면 거부가 힘들어진다. 때문에 신들은 인간에게 항상 별칭이나 신호로만 소통한다.</p>
+          <p><strong style="color:var(--gold)">주의:</strong> 잘못된 진명 사용 시 역효과 발생 — 원치 않는 존재를 부를 수 있다.</p>
+        </div>
+      </div>
+
+      <div class="rule-item" id="rule5">
+        <button class="rule-btn" onclick="toggleRule('rule5')">
+          <div class="rule-btn-left">
+            <div class="rule-num">제 5계</div>
+            <div class="rule-title">계약 구속 — 신과 인간 사이의 계약은 세대를 넘어 유효하다</div>
+          </div>
+          <div class="rule-arrow">▶</div>
+        </button>
+        <div class="rule-body">
+          <p>무당이 신과 맺은 계약은 혈연으로 이어진다. 계약자가 죽어도 이행되지 않은 계약은 자손에게 자동 승계된다. 이를 「업(業)」이라 부른다 — 집안 내림의 근원.</p>
+          <p>계약을 완전히 끊으려면 신과의 협상 또는 계약 조건 완수 외에 방법이 없다.</p>
+          <p><strong style="color:var(--gold)">신당 243 관련:</strong> 소장 이현무의 집안에 이행되지 않은 계약이 존재하는 것으로 추정됨 (미확인).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 신계 파벌 -->
+<div class="page-overlay" id="page-world-factions">
+  <div class="overlay-header">
+    <div class="overlay-title">신계 파벌</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">세계관 설정 — 신계 파벌</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">WORLD SETTING / 03</div>
+      <h1 class="page-hero-title">신계 파벌 구조</h1>
+      <p class="page-hero-sub">신들 사이에도 정치가 있다. 인간계 사건 대부분은 이 파벌전의 하청이다.</p>
+    </div>
+    <div class="prose">
+      <div class="two-col">
+        <div class="info-block" style="border-top-color:var(--gold)">
+          <h4>☀️ 천신 계열 (天神系) — 「하늘파」</h4>
+          <div class="info-row"><div class="info-key">대표</div><div class="info-val">옥황상제, 삼신할미, 칠성신</div></div>
+          <div class="info-row"><div class="info-key">성향</div><div class="info-val">질서·운명·규칙 중시. 현상 유지파</div></div>
+          <div class="info-row"><div class="info-key">인간관</div><div class="info-val">운명의 실 위에서 움직이는 존재</div></div>
+          <div class="info-row"><div class="info-key">현재</div><div class="info-val" style="color:var(--red2)">응답 두절 — 이유 미확인</div></div>
+        </div>
+        <div class="info-block" style="border-top-color:#6a4020">
+          <h4>🌑 지신 계열 (地神系) — 「땅파」</h4>
+          <div class="info-row"><div class="info-key">대표</div><div class="info-val">대감신, 터주신, 성황신</div></div>
+          <div class="info-row"><div class="info-key">성향</div><div class="info-val">실리·거래·지역 권력 중시</div></div>
+          <div class="info-row"><div class="info-key">인간관</div><div class="info-val">파트너 — 서로 이용하는 관계</div></div>
+          <div class="info-row"><div class="info-key">현재</div><div class="info-val" style="color:var(--gold)">결계 붕괴 원인 내부 조사 중 (은폐)</div></div>
+        </div>
+        <div class="info-block" style="border-top-color:var(--red)">
+          <h4>🔥 무신 계열 (武神系) — 「싸움파」</h4>
+          <div class="info-row"><div class="info-key">대표</div><div class="info-val">최영 장군신, 임경업 장군신</div></div>
+          <div class="info-row"><div class="info-key">성향</div><div class="info-val">힘·보호·응징 중시. 직접 행동파</div></div>
+          <div class="info-row"><div class="info-key">인간관</div><div class="info-val">약자를 지켜야 할 대상 (가장 친화적)</div></div>
+          <div class="info-row"><div class="info-key">현재</div><div class="info-val">대응 준비 중 — 천신계 승인 대기</div></div>
+        </div>
+        <div class="info-block" style="border-top-color:#204060">
+          <h4>🌊 수신 계열 (水神系) — 「물파」</h4>
+          <div class="info-row"><div class="info-key">대표</div><div class="info-val">용왕, 수부신</div></div>
+          <div class="info-row"><div class="info-key">성향</div><div class="info-val">비밀·은폐·깊이. 중립 자처, 독자 노선</div></div>
+          <div class="info-row"><div class="info-key">인간관</div><div class="info-val">흥미로운 관찰 대상</div></div>
+          <div class="info-row"><div class="info-key">현재</div><div class="info-val" style="color:var(--red2)">결계 붕괴 원인 알고 있는 것으로 추정</div></div>
+        </div>
+      </div>
+
+      <h2>현재 갈등 핵심</h2>
+      <div class="callout">천신계 vs 지신계의 대립이 핵심이다. 천신계는 무속의 약화를 운명으로 받아들이자는 입장이고, 지신계는 무속을 인위적으로 유지해서 자신들의 영향력을 보존하려 한다. 이 싸움이 인간계에서는 「이상한 의뢰들」로 나타난다.</div>
+      <p>수신계가 결계 붕괴의 원인을 알고 있다는 정황이 있으나 침묵하고 있다. 무신계는 행동하고 싶어하지만 천신계의 승인이 없어 발이 묶인 상태다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 사이 공간 -->
+<div class="page-overlay" id="page-world-locations">
+  <div class="overlay-header">
+    <div class="overlay-title">사이 공간</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">세계관 설정 — 사이 공간</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">WORLD SETTING / LOCATIONS</div>
+      <h1 class="page-hero-title">사이 공간 전체 목록</h1>
+      <p class="page-hero-sub">완전히 인간계도, 음계도 아닌 경계 지점들. 명경각 공식 관리 대상.</p>
+    </div>
+    <div class="prose">
+      <div class="callout red">⚠ 하기 장소들에 허가 없이 접근하는 것은 위험합니다. 특히 적등급 이상 구역은 반드시 2인 이상, 부적 지참 필수.</div>
+      <div class="location-cards">
+        <div class="loc-card level-danger">
+          <div class="loc-card-level">침식 진행 · 고착 존재</div>
+          <div class="loc-card-name">한강 노들섬 북쪽 수변</div>
+          <div class="loc-card-desc">물과 땅의 경계. 익사자 원혼 밀집 구역. 3등급 원귀 1기 고착 확인, 강제 추방 2회 실패.</div>
+          <div class="loc-card-detail">관리 등급: 흑 | 담당: 명경각 3과</div>
+        </div>
+        <div class="loc-card level-danger">
+          <div class="loc-card-level">공간 왜곡 · 민간 통제</div>
+          <div class="loc-card-name">종로 피맛골 막다른 골목</div>
+          <div class="loc-card-desc">조선시대 처형지 위. 원귀 다수. 공간 왜곡 2단계 진입. 관련 실종 사건 3건.</div>
+          <div class="loc-card-detail">관리 등급: 적 | 담당: 명경각 1과</div>
+        </div>
+        <div class="loc-card level-warn">
+          <div class="loc-card-level">음계 노출 · 오작동</div>
+          <div class="loc-card-name">지하철 3호선 무악재~독립문</div>
+          <div class="loc-card-desc">옛 처형장 지하 통과 구간. 야간 음계 노출 지속. 전자장비 오작동 지속 보고됨.</div>
+          <div class="loc-card-detail">관리 등급: 황 | 야간 단독 접근 금지</div>
+        </div>
+        <div class="loc-card level-warn">
+          <div class="loc-card-level">신계 연결 · 결계 약화</div>
+          <div class="loc-card-name">북악산 숙정문 인근</div>
+          <div class="loc-card-desc">조선 금표비 구역. 신계와 연결된 고지대. 결계 약화로 신계 압력 간헐 감지.</div>
+          <div class="loc-card-detail">관리 등급: 황 | 갱신 완료 (2024.12)</div>
+        </div>
+        <div class="loc-card level-danger">
+          <div class="loc-card-level">무속 밀집 · 밀도 상승</div>
+          <div class="loc-card-name">은평구 신사동 243번지 일대</div>
+          <div class="loc-card-desc">자연발생 결계. 신당 243 위치. 결계 붕괴 영향으로 밀도 이상 상승 중.</div>
+          <div class="loc-card-detail">관리 등급: 황-적 경계 | 신당 243 자체 모니터링</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 음계 존재 분류 -->
+<div class="page-overlay" id="page-beings-yin">
+  <div class="overlay-header">
+    <div class="overlay-title">음계 존재 분류</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">존재 분류 — 음계 존재</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">CLASSIFICATION / YIN BEINGS</div>
+      <h1 class="page-hero-title">음계 존재 분류 체계</h1>
+      <p class="page-hero-sub">유혼부터 음괴까지. 명경각 공식 분류 기준 v3.2</p>
+    </div>
+    <div class="prose">
+      <table class="data-table">
+        <thead>
+          <tr><th>등급</th><th>명칭</th><th>설명</th><th>처리 방법</th><th>위험도</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="grade-pill grade-w-tag">1등급</span></td>
+            <td class="td-serif">유혼(遺魂)</td>
+            <td>최근 사망, 미련 약함. 자신이 죽었는지 모르는 경우 多. 생전 루틴 반복.</td>
+            <td>설득·유도</td>
+            <td class="td-mono" style="color:#6a9960">낮음</td>
+          </tr>
+          <tr>
+            <td><span class="grade-pill grade-y-tag">2등급</span></td>
+            <td class="td-serif">집착령(執着靈)</td>
+            <td>강한 미련·원한. 특정 장소·인물 고착. 분리 시 저항. 집착 원인 해결 필요.</td>
+            <td>원인 해결</td>
+            <td class="td-mono" style="color:var(--gold)">중간</td>
+          </tr>
+          <tr>
+            <td><span class="grade-pill grade-r-tag">3등급</span></td>
+            <td class="td-serif">원귀(怨鬼)</td>
+            <td>오랜 원한으로 형태 변형 시작. 주변 현실에 영향. 대화 가능/불가 반반.</td>
+            <td>원한 해소 또는 봉인</td>
+            <td class="td-mono" style="color:var(--red2)">높음</td>
+          </tr>
+          <tr>
+            <td><span class="grade-pill grade-r-tag">4등급</span></td>
+            <td class="td-serif">흉신(凶神)</td>
+            <td>원귀가 수십~수백 년 고착. 의식 거의 없음. 대화 불가. 신계 협조 필수.</td>
+            <td>봉인 또는 강제 분해</td>
+            <td class="td-mono" style="color:var(--red2)">매우 높음</td>
+          </tr>
+          <tr>
+            <td><span class="grade-pill grade-b-tag">5등급</span></td>
+            <td class="td-serif">음괴(陰塊)</td>
+            <td>형태 완전 소실. 감정 덩어리. 재해급. 역사상 3회 발생. 처리 방법 미확립.</td>
+            <td>미확립</td>
+            <td class="td-mono" style="color:#ff4444">재해급</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout red">⚠ 5등급 음괴의 3번째 사례가 서울 지하 어딘가에 존재한다는 정보가 있으나, 위치 미확인. 기밀 문서 참조.</div>
+      <h2>48시간 법칙과 존재 변이</h2>
+      <p>모든 음계 존재는 인간계 체류 48시간 초과 시 고착화가 진행된다. 고착화된 존재는 등급 상향 가능성이 있다 — 즉, 1등급 유혼도 오랜 고착 시 2→3등급으로 변이될 수 있다.</p>
+      <p>현재 한강 노들섬의 고착 존재는 3등급 원귀로 분류되었으나, 추가 체류 시 4등급 흉신으로의 변이가 예측된다. 긴급 처리가 필요하나 방법을 찾지 못하고 있는 상태다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 무속 능력 체계 -->
+<div class="page-overlay" id="page-beings-shaman">
+  <div class="overlay-header">
+    <div class="overlay-title">무속 능력 체계</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">존재 분류 — 무속 능력 체계</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">CLASSIFICATION / SHAMAN ABILITIES</div>
+      <h1 class="page-hero-title">무속 능력 체계</h1>
+      <p class="page-hero-sub">신내림형·접신형·독립형 세 가지 유형과 주요 술법.</p>
+    </div>
+    <div class="prose">
+      <h2>능력 유형</h2>
+      <p>무당의 능력은 신이 허용한 범위 안에서만 작동한다. 신이 없으면 무당은 그냥 사람이다.</p>
+      <div class="two-col">
+        <div class="info-block" style="border-top-color:var(--gold)">
+          <h4>신내림형 (降神型)</h4>
+          <div class="info-row"><div class="info-key">방식</div><div class="info-val">신이 직접 무당의 몸에 들어옴</div></div>
+          <div class="info-row"><div class="info-key">능력치</div><div class="info-val">최대 — 신의 권능 직접 사용</div></div>
+          <div class="info-row"><div class="info-key">소모</div><div class="info-val">최대 — 강도 높을수록 수명·건강 소모</div></div>
+          <div class="info-row"><div class="info-key">부작용</div><div class="info-val">강림 후 기억 단절, 극심한 탈진</div></div>
+        </div>
+        <div class="info-block">
+          <h4>접신형 (接神型)</h4>
+          <div class="info-row"><div class="info-key">방식</div><div class="info-val">신과 연결하되 몸을 완전히 내주지 않음</div></div>
+          <div class="info-row"><div class="info-key">능력치</div><div class="info-val">중간 — 신의 감각·정보를 빌림</div></div>
+          <div class="info-row"><div class="info-key">장점</div><div class="info-val">의식 유지, 기억 보존, 장시간 가능</div></div>
+          <div class="info-row"><div class="info-key">위험</div><div class="info-val">한계 초과 시 신내림으로 전환될 위험</div></div>
+        </div>
+        <div class="info-block">
+          <h4>독립형 (獨立型)</h4>
+          <div class="info-row"><div class="info-key">방식</div><div class="info-val">신의 힘 없이 무당 본인이 개발한 술법</div></div>
+          <div class="info-row"><div class="info-key">대상</div><div class="info-val">신내림 거부자, 신이 없는 무당</div></div>
+          <div class="info-row"><div class="info-key">능력치</div><div class="info-val">낮고 범위 제한적</div></div>
+          <div class="info-row"><div class="info-key">소모</div><div class="info-val">본인의 생체 에너지 — 지속 가능하나 한계 명확</div></div>
+        </div>
+        <div class="info-block" style="border-top-color:var(--red)">
+          <h4>⚠ 신병(神病) 위험군</h4>
+          <div class="info-row"><div class="info-key">발생</div><div class="info-val">등가교환 무시, 신내림 강제 거부 시</div></div>
+          <div class="info-row"><div class="info-key">증상</div><div class="info-val">고열 → 환각 → 자아 소실 → 폐인</div></div>
+          <div class="info-row"><div class="info-key">처리</div><div class="info-val">신과의 협상·타협 외 방법 없음</div></div>
+          <div class="info-row"><div class="info-key">주의</div><div class="info-val" style="color:var(--red2)">억압 문신은 임시방편 — 한계 존재</div></div>
+        </div>
+      </div>
+      <h2>술법 종류</h2>
+      <table class="data-table">
+        <thead><tr><th>술법</th><th>용도</th><th>주의사항</th></tr></thead>
+        <tbody>
+          <tr><td class="td-serif td-gold">부적(符籍)</td><td>결계 형성, 존재 봉인, 이동 제한</td><td>시중 판매 부적은 효과 미미. 진짜 부적은 현장 즉석 제작</td></tr>
+          <tr><td class="td-serif td-gold">굿(巫儀)</td><td>신과의 본격 소통·계약·청원 의식</td><td>도중 중단 시 불완전 접신 상태 — 신도 인간도 아닌 상태로 고착 위험</td></tr>
+          <tr><td class="td-serif td-gold">진언(眞言)</td><td>특정 신·존재에 직접 말 거는 주문</td><td>잘못된 진명 포함 시 역효과 — 원치 않는 존재 소환</td></tr>
+          <tr><td class="td-serif td-gold">신점(神占)</td><td>신의 시선으로 과거·현재 열람</td><td>너무 깊이 보면 신의 시선에 역으로 끌려들어갈 위험</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 결계 시스템 -->
+<div class="page-overlay" id="page-beings-barrier">
+  <div class="overlay-header">
+    <div class="overlay-title">결계 시스템</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">존재 분류 — 결계 시스템</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">CLASSIFICATION / BARRIER SYSTEM</div>
+      <h1 class="page-hero-title">결계 시스템</h1>
+      <p class="page-hero-sub">자연결계·인공결계·금기결계. 현재 서울 자연결계 붕괴 진행 중.</p>
+    </div>
+    <div class="prose">
+      <h2>결계의 종류</h2>
+      <div class="two-col">
+        <div class="info-block">
+          <h4>자연 결계</h4>
+          <div class="info-row"><div class="info-key">형성</div><div class="info-val">무속 활동·신앙·제례로 자연발생</div></div>
+          <div class="info-row"><div class="info-key">유지</div><div class="info-val">신앙심이 남아있는 한 자동 유지</div></div>
+          <div class="info-row"><div class="info-key">현황</div><div class="info-val" style="color:var(--red2)">현대화로 전역 약화 진행 중</div></div>
+        </div>
+        <div class="info-block">
+          <h4>인공 결계</h4>
+          <div class="info-row"><div class="info-key">종류</div><div class="info-val">부적 기반 / 굿 기반 / 신당 기반</div></div>
+          <div class="info-row"><div class="info-key">갱신</div><div class="info-val">정기 갱신 필요 (굿 기반)</div></div>
+          <div class="info-row"><div class="info-key">특징</div><div class="info-val">신당 구조 자체가 상시 결계 역할</div></div>
+        </div>
+        <div class="info-block" style="border-top-color:var(--red)">
+          <h4>금기 결계</h4>
+          <div class="info-row"><div class="info-key">형성</div><div class="info-val">신이 직접 설치</div></div>
+          <div class="info-row"><div class="info-key">해제</div><div class="info-val">인간이 풀 수 없음</div></div>
+          <div class="info-row"><div class="info-key">위험</div><div class="info-val" style="color:var(--red2)">설치한 신 소멸 시 자동 해제</div></div>
+        </div>
+        <div class="info-block">
+          <h4>신당(神堂) 기반 결계</h4>
+          <div class="info-row"><div class="info-key">원리</div><div class="info-val">상시 신당 존재 = 구조 자체가 결계</div></div>
+          <div class="info-row"><div class="info-key">장점</div><div class="info-val">별도 갱신 없이 유지</div></div>
+          <div class="info-row"><div class="info-key">단점</div><div class="info-val">신당이 파괴·오염되면 즉시 붕괴</div></div>
+        </div>
+      </div>
+      <h2>결계 균열 징후 단계</h2>
+      <table class="data-table">
+        <thead><tr><th>단계</th><th>징후</th><th>현재 서울</th></tr></thead>
+        <tbody>
+          <tr><td class="td-mono" style="color:#6a9960">초기</td><td>특정 지역 기온 이상, 동물 행동 이상</td><td class="td-mono" style="color:var(--text3)">완료</td></tr>
+          <tr><td class="td-mono" style="color:var(--gold)">중기</td><td>일반인 꿈에 음계 존재 등장, 원인불명 사고 증가</td><td class="td-mono" style="color:var(--text3)">완료</td></tr>
+          <tr><td class="td-mono" style="color:var(--red2)">후기</td><td>낮에도 음계 존재 목격, 공간 왜곡 발생</td><td class="td-mono" style="color:var(--red2)">진입 중 (67%)</td></tr>
+          <tr><td class="td-mono" style="color:#ff4444">붕괴</td><td>음계와 인간계 경계 소실 — 전면 침식</td><td class="td-mono" style="color:var(--text3)">임계 85% 도달 시</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 인간 사회 구조 -->
+<div class="page-overlay" id="page-society">
+  <div class="overlay-header">
+    <div class="overlay-title">인간 사회 구조</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">사회·조직 — 인간 사회 구조</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">SOCIETY / HUMAN STRUCTURE</div>
+      <h1 class="page-hero-title">인간 사회 구조</h1>
+      <p class="page-hero-sub">일반인의 인식, 인식 가능자 분류, 무속계 내부 조직.</p>
+    </div>
+    <div class="prose">
+      <h2>일반인의 인식</h2>
+      <p>대부분의 현대인은 무속을 미신으로 취급한다. 그러나 인식과 달리 무의식 중에는 반응한다. 결계가 강한 지역에 가면 이유 없이 불안해지거나, 음계 존재 근처에서 한기를 느끼는 것이 그 예다.</p>
+      <h2>무속계 내부 조직 구조</h2>
+      <table class="data-table">
+        <thead><tr><th>구분</th><th>명칭</th><th>성격</th><th>명경각과의 관계</th></tr></thead>
+        <tbody>
+          <tr><td class="td-serif td-gold">민간</td><td>무당·법사·점술사</td><td>각자 모신 신이 다르고 능력도 다름. 느슨한 네트워크</td><td>협력·통제 대상</td></tr>
+          <tr><td class="td-serif" style="color:var(--red2)">비공식 기관</td><td>명경각(明鏡閣)</td><td>국가정보원 산하 비밀 부서. 공식 존재 미확인</td><td>—</td></tr>
+          <tr><td class="td-serif td-gold">신계 직속</td><td>무격청(巫覡廳)</td><td>천신 계열이 직접 운영. 법에 따라 움직이고 감정 없음</td><td>불편한 파트너. 명경각을 하위 취급</td></tr>
+          <tr><td class="td-serif">민간 사설</td><td>신당 243</td><td>은평구 소재 사설 사무소. 비공식 협력</td><td>CLASS-C / 협력·감시 병행</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 명경각 내부 -->
+<div class="page-overlay" id="page-bureau">
+  <div class="overlay-header">
+    <div class="overlay-title">명경각 내부</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">사회·조직 — 명경각 내부</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">ORGANIZATION / BUREAU DETAIL</div>
+      <h1 class="page-hero-title">명경각(明鏡閣) 내부</h1>
+      <p class="page-hero-sub">음계 사건을 은폐하고 통제한다. 공식적으로 존재하지 않는다.</p>
+    </div>
+    <div class="prose">
+      <div class="callout">명경각은 국가정보원 산하 비밀 부서로, 음계 사건을 은폐하고 통제하는 것이 목적이다. 무당을 포섭하거나 위협해서 정보를 통제한다. 신당 243과는 불편한 공존 관계 — 서로 필요할 때만 협력, 기본적으로는 불신.</div>
+      <h2>조직 특성</h2>
+      <p>명경각은 자신들이 통제할 수 없는 변수를 가장 경계한다. 신당 243이 그 대표적인 사례다. 충분한 능력을 갖추고 있으면서도 명경각의 지휘 체계 밖에서 움직이기 때문이다.</p>
+      <p>내부적으로 명경각은 결계 붕괴 사태를 완전히 통제하지 못하고 있다. 표면적으로는 「관리 중」이라는 입장을 유지하지만, 실제로는 해결책을 찾지 못한 상태다.</p>
+      <h2>신당 243에 대한 내부 분류</h2>
+      <table class="data-table">
+        <thead><tr><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td class="td-mono">분류 코드</td><td class="td-serif" style="color:var(--gold)">CLASS-C / 협력·감시 병행</td></tr>
+          <tr><td class="td-mono">위협 등급</td><td>낮음 — 단독으로는 위협 없음. 단, 신계 접촉 능력 보유로 인해 잠재적 변수</td></tr>
+          <tr><td class="td-mono">협력 사례</td><td>흑등급 이상 사건 시 비공식 용역 의뢰 다수</td></tr>
+          <tr><td class="td-mono">감시 수준</td><td>주 1회 이상 현장 정기 모니터링</td></tr>
+          <tr><td class="td-mono">주의 사항</td><td style="color:var(--red2)">소장 이현무의 집안 내력 — 신계 계약 이행 여부 추적 중</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 신당 243 -->
+<div class="page-overlay" id="page-sindang">
+  <div class="overlay-header">
+    <div class="overlay-title">신당 243</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">사회·조직 — 신당 243</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">ORGANIZATION / SINDANG-243</div>
+      <h1 class="page-hero-title">신당(神堂) 243</h1>
+      <p class="page-hero-sub">서울 은평구 신사동 243번지. 간판엔 「심리상담·민속연구소」.</p>
+    </div>
+    <div class="prose">
+      <div class="callout">"신이 일으킨 일은 신에게 닦아달라 한다" — 신당 243 비공식 모토</div>
+      <h2>기관 개요</h2>
+      <table class="data-table">
+        <thead><tr><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td class="td-mono">소재지</td><td>서울 은평구 신사동 골목 끝, 지번 243</td></tr>
+          <tr><td class="td-mono">공식 명칭</td><td>심리상담 · 민속연구소 (실제 명칭: 신당 243)</td></tr>
+          <tr><td class="td-mono">의뢰 경로</td><td>소개로만 접수. 광고 없음</td></tr>
+          <tr><td class="td-mono">설립</td><td>2011년. 설립 이유 비공개</td></tr>
+          <tr><td class="td-mono">명경각 분류</td><td style="color:var(--gold)">CLASS-C / 협력·감시 병행</td></tr>
+        </tbody>
+      </table>
+      <h2>의뢰 등급 분류</h2>
+      <table class="data-table">
+        <thead><tr><th>등급</th><th>유형</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr><td><span class="grade-pill grade-w-tag">⬜ 백(白)</span></td><td>단순 귀신 처리</td><td>이사한 집에 전 거주자 유혼이 남아있음</td></tr>
+          <tr><td><span class="grade-pill grade-y-tag">🟨 황(黃)</span></td><td>신계 개입 정황</td><td>갑자기 신병 증상이 생긴 일반인</td></tr>
+          <tr><td><span class="grade-pill grade-r-tag">🟥 적(赤)</span></td><td>음계 침식 진행 중</td><td>귀신이 현실을 변형시키고 있는 상태</td></tr>
+          <tr><td><span class="grade-pill grade-b-tag">⬛ 흑(黑)</span></td><td>신들의 대리전</td><td>의뢰 뒤에 신계 파벌 싸움이 있는 경우</td></tr>
+        </tbody>
+      </table>
+      <h2>주요 공간</h2>
+      <p>사무소 지하에 실제 굿을 진행하는 신당(神堂)이 있다. 평소에는 잠겨 있다. 신당 자체가 상시 결계로 기능한다 — 은평구 지역 자연결계 약화에도 불구하고 사무소 일대는 상대적으로 안정적으로 유지되고 있다.</p>
+      <h2>미해결 의문</h2>
+      <p>소장 이현무가 사무소를 차린 진짜 이유는 공식적으로 알려져 있지 않다. 명경각 내부 자료에 따르면 이현무의 집안에 신계와 맺은 이행되지 않은 계약이 있으며, 신당 243의 설립이 그 계약과 연관될 가능성이 있다.</p>
+      <div class="callout red">⚠ 기밀 — 이현무의 신계 계약 관련 추적 자료는 명경각 3과 한정 열람.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 결계 붕괴 현황 -->
+<div class="page-overlay" id="page-alert">
+  <div class="overlay-header">
+    <div class="overlay-title">결계 붕괴 현황</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">현황·경보 — 결계 붕괴 현황</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">CURRENT STATUS / BARRIER COLLAPSE</div>
+      <h1 class="page-hero-title">결계 붕괴 카운트다운</h1>
+      <p class="page-hero-sub">서울 자연결계 전체 균열 진행 현황. 원인 미상.</p>
+    </div>
+    <div class="prose">
+      <div class="callout red">⚠ 현재 서울 자연결계 균열도 67%. 임계점(85%) 도달 시 전면 붕괴 예상. 현재 속도 기준 2~3년 내 후기 단계 진입 전망.</div>
+      <h2>진행 현황</h2>
+      <div class="alert-grid" style="margin:0 0 24px">
+        <div class="alert-card">
+          <div class="alert-card-label">결계 균열도</div>
+          <div class="alert-card-value val-danger">67%</div>
+          <div class="alert-card-sub">임계 85%</div>
+        </div>
+        <div class="alert-card">
+          <div class="alert-card-label">침식 구역</div>
+          <div class="alert-card-value val-warn">7</div>
+          <div class="alert-card-sub">서울 내</div>
+        </div>
+        <div class="alert-card">
+          <div class="alert-card-label">고착 존재</div>
+          <div class="alert-card-value val-danger">3</div>
+          <div class="alert-card-sub">미처리</div>
+        </div>
+        <div class="alert-card">
+          <div class="alert-card-label">예상 붕괴</div>
+          <div class="alert-card-value val-neutral">2~3년</div>
+          <div class="alert-card-sub">현 속도 기준</div>
+        </div>
+      </div>
+      <h2>최근 6개월 이상 현상</h2>
+      <table class="data-table">
+        <thead><tr><th>현상</th><th>위치</th><th>시작</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr><td>한강 수온 이상 하강</td><td>한강 전 구간</td><td class="td-mono">2024.06</td><td class="td-mono" style="color:var(--red2)">지속</td></tr>
+          <tr><td>원인불명 실종 사건</td><td>종로 일대</td><td class="td-mono">2024.07</td><td class="td-mono" style="color:var(--red2)">3건 미해결</td></tr>
+          <tr><td>전자장비 오작동</td><td>3호선 무악재~독립문</td><td class="td-mono">2024.08</td><td class="td-mono" style="color:var(--gold)">반복 발생</td></tr>
+          <tr><td>은평구 주민 동일 꿈 보고</td><td>신사동 일대</td><td class="td-mono">2024.10</td><td class="td-mono" style="color:var(--gold)">진행 중</td></tr>
+          <tr><td>한강 고착 존재 발생</td><td>노들섬 북단</td><td class="td-mono">2024.11</td><td class="td-mono" style="color:var(--red2)">추방 실패</td></tr>
+          <tr><td>피맛골 공간 왜곡 2단계</td><td>종로</td><td class="td-mono">2024.12</td><td class="td-mono" style="color:var(--red2)">진행 중</td></tr>
+        </tbody>
+      </table>
+      <h2>신계별 대응 상태</h2>
+      <table class="data-table">
+        <thead><tr><th>파벌</th><th>입장</th><th>현재 상태</th></tr></thead>
+        <tbody>
+          <tr><td class="td-serif" style="color:var(--gold)">천신계</td><td>방관 — "운명이다"</td><td class="td-mono" style="color:var(--red2)">응답 두절</td></tr>
+          <tr><td class="td-serif" style="color:var(--gold)">지신계</td><td>원인 조사 중 (은폐)</td><td class="td-mono" style="color:var(--gold)">비공개 조사</td></tr>
+          <tr><td class="td-serif" style="color:var(--gold)">무신계</td><td>대응 준비</td><td class="td-mono" style="color:var(--gold)">천신계 승인 대기</td></tr>
+          <tr><td class="td-serif" style="color:var(--gold)">수신계</td><td>침묵</td><td class="td-mono" style="color:var(--red2)">원인 알고 있는 것으로 추정</td></tr>
+        </tbody>
+      </table>
+      <h2>핵심 미스터리</h2>
+      <div class="callout red">
+        <p style="color:#ffaaaa;margin-bottom:8px">1. 결계 붕괴는 자연현상인가, 누군가 의도적으로 만든 것인가</p>
+        <p style="color:#ffaaaa;margin-bottom:8px">2. 수신계는 무엇을 알고 있는가</p>
+        <p style="color:#ffaaaa;margin-bottom:8px">3. 서울 지하 어딘가에 봉인된 5등급 음괴가 있다는 소문 — 사실인가</p>
+        <p style="color:#ffaaaa;margin-bottom:0">4. 명경각이 결계 붕괴보다 신당 243을 더 주시하는 이유가 있는가</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 사건 기록 -->
+<div class="page-overlay" id="page-incidents">
+  <div class="overlay-header">
+    <div class="overlay-title">사건 기록</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">현황·경보 — 사건 기록</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">RECORDS / INCIDENTS</div>
+      <h1 class="page-hero-title">사건 기록</h1>
+      <p class="page-hero-sub">명경각 공식 처리 사건 목록. 일부 항목 기밀 처리.</p>
+    </div>
+    <div class="prose">
+      <div class="search-bar">
+        <div class="search-icon">⌕</div>
+        <input class="search-input" type="text" placeholder="사건명, 위치, 담당 부서 검색...">
+        <button class="search-btn">검색</button>
+      </div>
+      <table class="board-table">
+        <thead>
+          <tr>
+            <th style="width:40px">번호</th>
+            <th>사건명</th>
+            <th style="width:80px">등급</th>
+            <th style="width:100px">일자</th>
+            <th style="width:80px">담당</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="board-num">243</td>
+            <td><div class="board-title-cell"><span class="grade-pill grade-b-tag">흑</span>한강 노들섬 원귀 고착 — 강제 추방 2회 실패</div></td>
+            <td><span class="grade-pill grade-b-tag">흑</span></td>
+            <td class="board-date">2024.12.18</td>
+            <td class="board-dept">3과</td>
+          </tr>
+          <tr>
+            <td class="board-num">242</td>
+            <td><div class="board-title-cell"><span class="grade-pill grade-r-tag">적</span>종로 피맛골 공간 왜곡 2단계 진입</div></td>
+            <td><span class="grade-pill grade-r-tag">적</span></td>
+            <td class="board-date">2024.12.16</td>
+            <td class="board-dept">1과</td>
+          </tr>
+          <tr>
+            <td class="board-num">241</td>
+            <td><div class="board-title-cell"><span class="grade-pill grade-r-tag">적</span>북악산 숙정문 결계 약화 — 긴급 갱신</div></td>
+            <td><span class="grade-pill grade-r-tag">적</span></td>
+            <td class="board-date">2024.12.14</td>
+            <td class="board-dept">2과</td>
+          </tr>
+          <tr>
+            <td class="board-num">240</td>
+            <td><div class="board-title-cell"><span class="grade-pill grade-y-tag">황</span>신사동 주민 집단 이상 꿈 보고 — 조사 완료</div></td>
+            <td><span class="grade-pill grade-y-tag">황</span></td>
+            <td class="board-date">2024.12.10</td>
+            <td class="board-dept">조사팀</td>
+          </tr>
+          <tr>
+            <td class="board-num">239</td>
+            <td><div class="board-title-cell"><span class="grade-pill grade-y-tag">황</span>안목 보유자 미등록 확인 — 은평구 거주자</div></td>
+            <td><span class="grade-pill grade-y-tag">황</span></td>
+            <td class="board-date">2024.12.07</td>
+            <td class="board-dept">3과</td>
+          </tr>
+          <tr>
+            <td class="board-num">238</td>
+            <td><div class="board-title-cell"><span class="grade-pill grade-w-tag">백</span>마포구 집착령 처리 완료 — 신당 243 용역</div></td>
+            <td><span class="grade-pill grade-w-tag">백</span></td>
+            <td class="board-date">2024.12.03</td>
+            <td class="board-dept">협력</td>
+          </tr>
+          <tr>
+            <td class="board-num">███</td>
+            <td style="color:var(--text3)">████████████████████████████████</td>
+            <td><span class="grade-pill grade-b-tag">기밀</span></td>
+            <td class="board-date" style="color:var(--text3)">2024.11.██</td>
+            <td class="board-dept" style="color:var(--text3)">██팀</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <a class="page-btn active">1</a>
+        <a class="page-btn">2</a>
+        <a class="page-btn">3</a>
+        <a class="page-btn">···</a>
+        <a class="page-btn">24</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 기밀 문서 -->
+<div class="page-overlay" id="page-classified">
+  <div class="overlay-header">
+    <div class="overlay-title">기밀 문서</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">현황·경보 — 기밀 문서</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">CLASSIFIED DOCUMENTS</div>
+      <h1 class="page-hero-title">기밀 문서</h1>
+      <p class="page-hero-sub">보안 등급 5 이상 전용. 열람 시 자동 기록됨.</p>
+    </div>
+    <div class="prose">
+      <div class="callout red">⚠ 이 섹션의 문서는 명경각 내부 최고 보안 등급 자료입니다. 열람자 정보가 자동으로 기록됩니다. 무단 유출 시 이계관리특별법 제12조에 따라 처리됩니다.</div>
+      <table class="data-table">
+        <thead><tr><th>문서 코드</th><th>제목</th><th>보안 등급</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="td-mono" style="color:var(--red2)">MG-C-001</td>
+            <td>서울 지하 5등급 음괴 봉인 위치 추정 보고서</td>
+            <td style="color:var(--red2)">LEVEL-5</td>
+            <td class="td-mono" style="color:var(--red2)">접근 제한</td>
+          </tr>
+          <tr>
+            <td class="td-mono" style="color:var(--red2)">MG-C-002</td>
+            <td>이현무 집안 신계 계약 추적 — 3세대 업(業) 분석</td>
+            <td style="color:var(--red2)">LEVEL-5</td>
+            <td class="td-mono" style="color:var(--red2)">접근 제한</td>
+          </tr>
+          <tr>
+            <td class="td-mono" style="color:var(--red2)">MG-C-003</td>
+            <td>수신계 침묵 원인 분석 — 결계 붕괴 배후 추적</td>
+            <td style="color:var(--red2)">LEVEL-5</td>
+            <td class="td-mono" style="color:var(--red2)">접근 제한</td>
+          </tr>
+          <tr>
+            <td class="td-mono" style="color:var(--text3)">MG-C-004</td>
+            <td style="color:var(--text3)">████████████████████████</td>
+            <td style="color:var(--text3)">LEVEL-██</td>
+            <td class="td-mono" style="color:var(--text3)">존재 자체 기밀</td>
+          </tr>
+          <tr>
+            <td class="td-mono" style="color:var(--text3)">MG-C-005</td>
+            <td style="color:var(--text3)">████████████████████████</td>
+            <td style="color:var(--text3)">LEVEL-██</td>
+            <td class="td-mono" style="color:var(--text3)">존재 자체 기밀</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:40px;padding:30px;background:var(--surface);border:1px solid var(--border);text-align:center;">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.15em;margin-bottom:8px">ACCESS DENIED</div>
+        <div style="font-family:var(--serif);font-size:18px;color:var(--red2);margin-bottom:8px">열람 권한이 없습니다</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.08em">현재 등급: LEVEL-3 / 필요 등급: LEVEL-5</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 공지·게시판 -->
+<div class="page-overlay" id="page-board">
+  <div class="overlay-header">
+    <div class="overlay-title">공지·게시판</div>
+    <button class="overlay-close" onclick="showPage('main')">✕ &nbsp;닫기</button>
+  </div>
+  <div class="overlay-content">
+    <div class="breadcrumb">
+      <button onclick="showPage('main')">홈</button><span>/</span>
+      <span class="current">공지·게시판</span>
+    </div>
+    <div class="page-hero">
+      <div class="page-hero-label">NOTICE BOARD</div>
+      <h1 class="page-hero-title">공지·게시판</h1>
+      <p class="page-hero-sub">명경각 및 신당 243 관련 공지, 보고, 공유 사항.</p>
+    </div>
+    <div class="prose">
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab(this,'board-all')">전체</button>
+        <button class="tab-btn" onclick="switchTab(this,'board-urgent')">긴급</button>
+        <button class="tab-btn" onclick="switchTab(this,'board-notice')">일반공지</button>
+        <button class="tab-btn" onclick="switchTab(this,'board-report')">보고서</button>
+      </div>
+
+      <div class="tab-panel active" id="board-all">
+        <div class="search-bar">
+          <div class="search-icon">⌕</div>
+          <input class="search-input" type="text" placeholder="제목, 부서 검색...">
+          <button class="search-btn">검색</button>
+        </div>
+        <table class="board-table">
+          <thead>
+            <tr><th style="width:40px">번호</th><th>제목</th><th style="width:80px">등급</th><th style="width:100px">일자</th><th style="width:80px">부서</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="board-num">087</td><td><div class="board-title-cell"><span class="grade-pill grade-b-tag">흑</span>[긴급] 한강 노들섬 북단 음계 고착 존재 — 강제 추방 실패<span class="notice-new" style="margin-left:4px"></span></div></td><td><span class="grade-pill grade-b-tag">흑</span></td><td class="board-date">2024.12.19</td><td class="board-dept">3과</td></tr>
+            <tr><td class="board-num">086</td><td><div class="board-title-cell"><span class="grade-pill grade-r-tag">적</span>[적등급] 종로 피맛골 공간 왜곡 2단계 — 민간 접근 통제<span class="notice-new" style="margin-left:4px"></span></div></td><td><span class="grade-pill grade-r-tag">적</span></td><td class="board-date">2024.12.17</td><td class="board-dept">1과</td></tr>
+            <tr><td class="board-num">085</td><td><div class="board-title-cell"><span class="grade-pill grade-r-tag">적</span>북악산 숙정문 인근 결계 약화 보고 — 긴급 갱신 지시</div></td><td><span class="grade-pill grade-r-tag">적</span></td><td class="board-date">2024.12.15</td><td class="board-dept">2과</td></tr>
+            <tr><td class="board-num">084</td><td><div class="board-title-cell"><span class="grade-pill grade-y-tag">황</span>2025년 1분기 안목 보유자 정기 등록 갱신 안내<span class="notice-new" style="margin-left:4px"></span></div></td><td><span class="grade-pill grade-y-tag">황</span></td><td class="board-date">2024.12.10</td><td class="board-dept">관리과</td></tr>
+            <tr><td class="board-num">083</td><td><div class="board-title-cell"><span class="grade-pill grade-y-tag">황</span>지하철 3호선 야간 운행 구간 음계 노출 수치 증가</div></td><td><span class="grade-pill grade-y-tag">황</span></td><td class="board-date">2024.12.12</td><td class="board-dept">조사팀</td></tr>
+            <tr><td class="board-num">082</td><td><div class="board-title-cell"><span class="grade-pill grade-w-tag">백</span>신당 243 협력 기관 등록 현황 갱신 — 12월 기준</div></td><td><span class="grade-pill grade-w-tag">백</span></td><td class="board-date">2024.12.08</td><td class="board-dept">총무과</td></tr>
+            <tr><td class="board-num">081</td><td><div class="board-title-cell"><span class="grade-pill grade-w-tag">백</span>결계 부적 표준 규격 개정안 배포 — 무격청 공동 작성</div></td><td><span class="grade-pill grade-w-tag">백</span></td><td class="board-date">2024.12.05</td><td class="board-dept">기술과</td></tr>
+            <tr><td class="board-num">080</td><td><div class="board-title-cell"><span class="grade-pill grade-w-tag">백</span>연말 정기 보고서 제출 기한 안내 (12월 31일)</div></td><td><span class="grade-pill grade-w-tag">백</span></td><td class="board-date">2024.12.01</td><td class="board-dept">총무과</td></tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <a class="page-btn active">1</a>
+          <a class="page-btn">2</a>
+          <a class="page-btn">3</a>
+          <a class="page-btn">4</a>
+          <a class="page-btn">5</a>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="board-urgent">
+        <table class="board-table">
+          <thead><tr><th>번호</th><th>제목</th><th style="width:100px">일자</th><th style="width:80px">부서</th></tr></thead>
+          <tbody>
+            <tr><td class="board-num">087</td><td><div class="board-title-cell"><span class="grade-pill grade-b-tag">흑</span>[긴급] 한강 노들섬 고착 존재 추방 실패</div></td><td class="board-date">2024.12.19</td><td class="board-dept">3과</td></tr>
+            <tr><td class="board-num">086</td><td><div class="board-title-cell"><span class="grade-pill grade-r-tag">적</span>종로 피맛골 공간 왜곡 2단계</div></td><td class="board-date">2024.12.17</td><td class="board-dept">1과</td></tr>
+            <tr><td class="board-num">085</td><td><div class="board-title-cell"><span class="grade-pill grade-r-tag">적</span>북악산 결계 약화 긴급 갱신</div></td><td class="board-date">2024.12.15</td><td class="board-dept">2과</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-panel" id="board-notice">
+        <table class="board-table">
+          <thead><tr><th>번호</th><th>제목</th><th style="width:100px">일자</th><th style="width:80px">부서</th></tr></thead>
+          <tbody>
+            <tr><td class="board-num">084</td><td><div class="board-title-cell"><span class="grade-pill grade-y-tag">황</span>2025년 1분기 안목 등록 갱신 안내</div></td><td class="board-date">2024.12.10</td><td class="board-dept">관리과</td></tr>
+            <tr><td class="board-num">082</td><td><div class="board-title-cell"><span class="grade-pill grade-w-tag">백</span>협력 기관 등록 현황 갱신</div></td><td class="board-date">2024.12.08</td><td class="board-dept">총무과</td></tr>
+            <tr><td class="board-num">081</td><td><div class="board-title-cell"><span class="grade-pill grade-w-tag">백</span>결계 부적 표준 규격 개정안</div></td><td class="board-date">2024.12.05</td><td class="board-dept">기술과</td></tr>
+            <tr><td class="board-num">080</td><td><div class="board-title-cell"><span class="grade-pill grade-w-tag">백</span>연말 정기 보고서 기한 안내</div></td><td class="board-date">2024.12.01</td><td class="board-dept">총무과</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-panel" id="board-report">
+        <table class="board-table">
+          <thead><tr><th>번호</th><th>제목</th><th style="width:100px">일자</th><th style="width:80px">부서</th></tr></thead>
+          <tbody>
+            <tr><td class="board-num">083</td><td><div class="board-title-cell"><span class="grade-pill grade-y-tag">황</span>3호선 야간 음계 노출 수치 보고</div></td><td class="board-date">2024.12.12</td><td class="board-dept">조사팀</td></tr>
+            <tr><td class="board-num">079</td><td><div class="board-title-cell"><span class="grade-pill grade-y-tag">황</span>11월 결계 균열도 측정 보고서</div></td><td class="board-date">2024.11.30</td><td class="board-dept">1과</td></tr>
+            <tr><td class="board-num">075</td><td><div class="board-title-cell"><span class="grade-pill grade-r-tag">적</span>한강 수온 이상 현상 6개월 누적 보고</div></td><td class="board-date">2024.11.15</td><td class="board-dept">조사팀</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo-ko">명경각(明鏡閣)</div>
+        <div class="footer-logo-en">MYEONGGYEONG-GAK · NATIONAL OCCULT BUREAU</div>
+        <p class="footer-desc">본 포털은 명경각 인가자 및 협력 기관 전용입니다. 무단 접근 시 관련 법령에 따라 처리됩니다. 이 기관의 존재는 공식적으로 확인되지 않습니다.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">세계관 설정</div>
+        <ul class="footer-links">
+          <li><a href="#" onclick="showPage('world-structure'); return false;">삼계(三界) 구조</a></li>
+          <li><a href="#" onclick="showPage('world-rules'); return false;">불문율(不文律)</a></li>
+          <li><a href="#" onclick="showPage('world-factions'); return false;">신계 파벌</a></li>
+          <li><a href="#" onclick="showPage('world-locations'); return false;">사이 공간</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">존재 분류</div>
+        <ul class="footer-links">
+          <li><a href="#" onclick="showPage('beings-yin'); return false;">음계 존재</a></li>
+          <li><a href="#" onclick="showPage('beings-shaman'); return false;">무속 능력 체계</a></li>
+          <li><a href="#" onclick="showPage('beings-barrier'); return false;">결계 시스템</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">현황·경보</div>
+        <ul class="footer-links">
+          <li><a href="#" onclick="showPage('alert'); return false;">결계 붕괴 현황</a></li>
+          <li><a href="#" onclick="showPage('incidents'); return false;">사건 기록</a></li>
+          <li><a href="#" onclick="showPage('classified'); return false;">기밀 문서</a></li>
+          <li><a href="#" onclick="showPage('board'); return false;">공지·게시판</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© MYEONGGYEONG-GAK. ALL RIGHTS RESERVED. PORTAL v4.7</div>
+      <div class="footer-classify">CLASSIFIED — INTERNAL USE ONLY</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // 날짜 표시
+  function updateDate() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,'0');
+    const d = String(now.getDate()).padStart(2,'0');
+    const h = String(now.getHours()).padStart(2,'0');
+    const mi = String(now.getMinutes()).padStart(2,'0');
+    const el = document.getElementById('headerDate');
+    if (el) el.innerHTML = `${y}.${m}.${d}<br>${h}:${mi} KST`;
+  }
+  updateDate();
+  setInterval(updateDate, 60000);
+
+  // 페이지 네비게이션
+  let currentPage = 'main';
+  function showPage(id) {
+    // 메인 숨기기/보이기
+    const mainEl = document.getElementById('page-main');
+    const footerEl = document.querySelector('footer');
+
+    // 모든 오버레이 숨기기
+    document.querySelectorAll('.page-overlay').forEach(el => {
+      el.classList.remove('active');
+    });
+
+    if (id === 'main') {
+      mainEl.style.display = '';
+      footerEl.style.display = '';
+      window.scrollTo(0, 0);
+    } else {
+      const target = document.getElementById('page-' + id);
+      if (target) {
+        mainEl.style.display = 'none';
+        footerEl.style.display = 'none';
+        target.classList.add('active');
+        target.scrollTop = 0;
+      }
+    }
+    currentPage = id;
+  }
+
+  // 모바일 메뉴
+  function toggleMobile() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    const isOpen = menu.classList.contains('open');
+    menu.classList.toggle('open', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+  }
+
+  // 드롭다운 외부 클릭 닫기
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item')) {
+      // 이미 css hover로 처리됨
+    }
+    if (!e.target.closest('header') && !e.target.closest('.mobile-menu')) {
+      const menu = document.getElementById('mobileMenu');
+      const btn = document.getElementById('hamburger');
+      if (menu.classList.contains('open')) {
+        menu.classList.remove('open');
+        btn.classList.remove('open');
+      }
+    }
+  });
+
+  // 탭 전환
+  function switchTab(btn, panelId) {
+    const nav = btn.closest('.tab-nav') || btn.parentElement;
+    nav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // 같은 prose 컨테이너 안의 탭 패널만
+    const container = btn.closest('.prose') || btn.closest('.overlay-content');
+    if (container) {
+      container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      const target = container.querySelector('#' + panelId);
+      if (target) target.classList.add('active');
+    }
+  }
+
+  // 아코디언 (불문율)
+  function toggleRule(id) {
+    const item = document.getElementById(id);
+    item.classList.toggle('open');
+  }
+
+  // 스크롤 페이드인
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => {
+    fadeObserver.observe(el);
+  });
+</script>
+</body>
+</html>
